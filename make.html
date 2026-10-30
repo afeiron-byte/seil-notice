@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가정통신문 만들기 - 세일고등학교</title>
+<style>
+/* ===== 가정통신문 문서 양식 (세일고등학교) ===== */
+.nd{--nd-gray:#808080;--nd-muted:#595959;--nd-hdr:#e7e6e6;--nd-lbl:#f2f2f2;
+  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;
+  color:#111;font-size:11pt;line-height:1.56;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.nd *{box-sizing:border-box}
+:where(.nd) p{margin:0}
+.nd img{display:block;max-width:100%}
+
+/* 종이(A4) 한 쪽 */
+.nd-page{width:210mm;height:297mm;padding:9mm 20mm 8mm;background:#fff;overflow:hidden;position:relative}
+.nd-inner > :first-child{margin-top:0 !important}
+
+/* 머리 부분 */
+.nd-top{display:flex;justify-content:flex-end;min-height:9.3mm}
+.nd-top img{width:55.6mm;height:auto}
+.nd-site{font-size:9pt;line-height:1.3;margin:1mm 0 .8mm}
+.nd-hdr{display:grid;grid-template-columns:20fr 37fr 62fr 51fr;border-top:2.25pt solid var(--nd-gray);
+  border-bottom:2.25pt solid var(--nd-gray);min-height:21mm}
+.nd-hdr > div{display:flex;align-items:center;justify-content:center;padding:0 1.5mm}
+.nd-hdr-emblem img{width:16.9mm;height:auto}
+.nd-hdr-school{flex-direction:column;align-items:flex-start !important;border-right:1pt solid var(--nd-gray);line-height:1.35}
+.nd-hdr-school .m{font-size:9pt}
+.nd-hdr-school .s{font-size:14pt;font-weight:700}
+.nd-hdr-title{background:var(--nd-hdr);border-right:1pt solid var(--nd-gray);white-space:nowrap;font-size:24pt;font-weight:700;line-height:1.2}
+.nd-hdr-slogan img{width:46.6mm;height:auto}
+.nd-title{font-size:16pt;font-weight:700;text-align:center;line-height:1.4;margin:4mm 0 2.5mm;word-break:keep-all}
+
+/* 본문 */
+.nd-p{text-align:justify;word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}
+.nd-p + .nd-p{margin-top:0}
+.nd-gap{height:2.4mm}
+.nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}
+.nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}
+.nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}
+.nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}
+.nd-item.plain{padding-left:3mm}
+.nd-table-wrap{margin:2mm 0 1mm}
+.nd-table{width:100%;border-collapse:collapse;table-layout:auto;font-size:10pt;line-height:1.4}
+.nd-table th,.nd-table td{border:.75pt solid #000;padding:1.2mm 1.5mm;text-align:center;vertical-align:middle;word-break:keep-all}
+.nd-table th{background:var(--nd-lbl);font-weight:700}
+.nd-closing{margin-top:2.4mm}
+.nd-contact{text-align:center;margin-top:3mm;font-size:10.5pt}
+
+/* 날짜·학교장 */
+.nd-sign{position:relative;margin-top:5mm;padding-bottom:1mm}
+.nd-date{font-size:14pt;text-align:center;line-height:1.4}
+.nd-principal{font-size:20pt;font-weight:700;text-align:center;letter-spacing:3pt;line-height:1.45}
+
+/* 절취선·회신서 */
+.nd-slipwrap{margin-top:5mm}
+.nd-cut{display:flex;align-items:center;gap:2.5mm;font-size:9pt;color:var(--nd-muted);letter-spacing:2pt;line-height:1.3;margin:0 0 3.5mm}
+.nd-cut::before,.nd-cut::after{content:"";flex:1;border-top:1px dashed #7a7a7a}
+.nd-slip-title{font-size:15pt;font-weight:700;text-align:center;line-height:1.4;margin:0 0 2mm;word-break:keep-all}
+.nd-slip-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.nd-slip-table th,.nd-slip-table td{border:.75pt solid #000;height:9mm;padding:0 1.5mm;vertical-align:middle;text-align:center}
+.nd-slip-table th{background:var(--nd-lbl);font-size:10.5pt;font-weight:700;line-height:1.3;word-break:keep-all}
+.nd-slip-table th small{display:block;font-size:8.5pt;font-weight:400}
+.nd-slip-table td.tall{height:13mm}
+.nd-slip-table td.ex{text-align:left;white-space:pre-wrap;font-size:10pt;line-height:1.4;padding:1mm 2mm}
+.nd-slip-table .cls{white-space:nowrap;letter-spacing:.5pt}
+.nd-slip-text{margin-top:2.4mm;text-align:justify;word-break:keep-all;white-space:pre-wrap}
+.nd-options{display:flex;justify-content:center;flex-wrap:wrap;gap:2mm 9mm;font-size:12pt;margin:1.5mm 0}
+.nd-opt{display:inline-flex;align-items:center;gap:1.6mm}
+.nd-box{display:inline-flex;align-items:center;justify-content:center;width:.95em;height:.95em;border:1.2px solid #222;line-height:1}
+.nd-slip-date{text-align:right;margin-top:2mm;white-space:pre}
+.nd-sline{display:flex;justify-content:flex-end;align-items:center;min-height:8mm}
+.nd-sline .lb{white-space:nowrap}
+.nd-sline .nm{display:inline-block;width:32mm;padding-left:4mm;white-space:nowrap;overflow:hidden}
+.nd-sline .mk{position:relative;white-space:nowrap}
+.nd-sline .sig{position:absolute;right:-3mm;top:50%;transform:translateY(-50%);width:24mm;height:9mm;max-width:none;object-fit:contain}
+.nd-slip-note{font-size:9.5pt;color:#333;margin-top:1.5mm}
+
+/* ===== 화면에서 흐르는 형태(가정용) ===== */
+.nd-flow{background:#fff}
+.nd-flow .nd-sheet{container-type:inline-size}
+.nd-flow .nd-top img{width:32.7cqw}
+.nd-flow .nd-hdr{min-height:12.35cqw}
+.nd-flow .nd-hdr > div{padding:0 .88cqw}
+.nd-flow .nd-hdr-emblem img{width:9.95cqw}
+.nd-flow .nd-hdr-school .m{font-size:1.87cqw}
+.nd-flow .nd-hdr-school .s{font-size:2.9cqw}
+.nd-flow .nd-hdr-title{font-size:4.98cqw}
+.nd-flow .nd-hdr-slogan img{width:27.4cqw}
+
+:root{--bg:#eef1f5;--card:#fff;--line:#d5dbe3;--ink:#1d2430;--sub:#5b6573;--accent:#1d4f91;--accent-2:#2f6fc0;--soft:#eaf1fb;
+  --ok:#1b6e34;--okbg:#e7f4ea;--err:#c62828;--errbg:#fdecec;--warn:#8a5a00;--warnbg:#fff4dc}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Malgun Gothic','맑은 고딕','Nanum Gothic','나눔고딕','Noto Sans KR',sans-serif;font-size:15px;line-height:1.55}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent-2)}
+a.btn{text-decoration:none;display:inline-block;color:inherit}
+a.btn.primary{color:#fff}
+.app-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:10px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.app-head h1{font-size:18px;margin:0;white-space:nowrap}
+.app-head h1 small{font-weight:400;color:var(--sub);font-size:13px;margin-left:6px}
+.tabs{display:flex;gap:6px}
+#btnNew2{margin-left:auto}
+.tab-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 16px;cursor:pointer;font-weight:700;color:var(--sub)}
+.tab-btn[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+main{padding:16px 18px 40px}
+.make{display:grid;grid-template-columns:minmax(380px,520px) 1fr;gap:18px;align-items:start}
+.make > *{min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 .no{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px}
+.types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.type{position:relative;border:1.5px solid var(--line);border-radius:12px;padding:10px 10px 9px;cursor:pointer;background:#fff}
+.type input{position:absolute;opacity:0;pointer-events:none}
+.type b{display:block;font-size:15px}
+.type span{display:block;font-size:12.5px;color:var(--sub);line-height:1.4;margin-top:3px}
+.type:has(input:checked){border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 1px var(--accent) inset}
+.type:has(input:focus-visible){outline:2px solid var(--accent-2);outline-offset:2px}
+.field{margin:10px 0 0}
+.field > label,.field > .lab{display:block;font-weight:700;font-size:14px;margin-bottom:4px}
+.field .hint{font-size:12.5px;color:var(--sub);margin-top:3px}
+.row{display:flex;gap:8px;align-items:center}
+.row > *{flex:1}
+input[type=text],input[type=email],input[type=date],input[type=password],select,textarea{width:100%;border:1px solid #c3cad3;border-radius:9px;padding:8px 10px;background:#fff}
+textarea{resize:vertical;min-height:62px;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent-2);outline-offset:0;border-color:transparent}
+.btn{-webkit-appearance:none;appearance:none;border:1px solid #c3cad3;background:#fff;border-radius:10px;padding:9px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#f5f7fa}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#173f75}
+.btn.ai{background:linear-gradient(90deg,#4b6cd8,#7a4fd0);border-color:transparent;color:#fff}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;border-radius:999px;padding:3px 10px;background:#eef0f3;color:var(--sub)}
+.chip.on{background:var(--okbg);color:var(--ok)}
+.chip.off{background:var(--warnbg);color:var(--warn);cursor:pointer}
+details.more{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--accent)}
+.check{display:flex;align-items:center;gap:8px;font-weight:400 !important}
+.check input{width:18px;height:18px}
+.preview{position:sticky;top:62px}
+.pv-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.pv-bar .info{color:var(--sub);font-size:13.5px;margin-right:auto}
+.pv-scroll{max-height:calc(100vh - 120px);overflow:auto;background:#cfd6df;border-radius:12px;padding:14px}
+.pv-sizer{position:relative;overflow:hidden;margin:0 auto}
+.pv-scale{position:absolute;left:0;top:0;width:794px;transform-origin:0 0}
+.nd-pages .nd-page{margin:0 auto 14px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.status{border-radius:10px;padding:10px 12px;font-size:14px;margin-top:10px}
+.status.ok{background:var(--okbg);color:var(--ok)}
+.status.err{background:var(--errbg);color:var(--err)}
+.status.info{background:var(--soft);color:var(--accent)}
+.steps-run{list-style:none;padding:0;margin:10px 0 0}
+.steps-run li{padding:3px 0 3px 26px;position:relative;color:var(--sub)}
+.steps-run li::before{content:"○";position:absolute;left:4px}
+.steps-run li.doing{color:var(--accent);font-weight:700}
+.steps-run li.doing::before{content:"◔"}
+.steps-run li.done{color:var(--ok)}
+.steps-run li.done::before{content:"✓"}
+.steps-run li.fail{color:var(--err)}
+.steps-run li.fail::before{content:"✕"}
+.result{margin-top:12px}
+.result .links{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.copy{display:flex;gap:6px}
+.copy input{font-size:13px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:90;width:max-content;max-width:calc(100vw - 32px);background:#222b36;color:#fff;
+  padding:11px 16px;border-radius:10px;font-size:15px;box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.toast.err{background:var(--err)}
+.toast.ok{background:var(--ok)}
+.ask{position:fixed;inset:0;z-index:95;background:rgba(15,20,30,.5);display:flex;align-items:center;justify-content:center;padding:16px}
+.ask[hidden]{display:none}
+.ask-box{background:#fff;border-radius:14px;max-width:420px;width:100%;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.ask-box p{margin:0 0 14px;font-size:15.5px;line-height:1.6;white-space:pre-line}
+.ask-box .btns{justify-content:flex-end}
+.past{list-style:none;margin:10px 0 0;padding:0;max-height:340px;overflow:auto;border-top:1px solid var(--line)}
+.past li{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line)}
+.past .tt{font-weight:700;font-size:14.5px}
+.past .mm{font-size:12.5px;color:var(--sub)}
+.past .btns{grid-column:2;grid-row:1 / span 2}
+.past .empty{display:block;color:var(--sub);font-size:14px}
+.restore{display:flex;gap:10px;align-items:center;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:14px}
+.restore .btn{margin-left:auto}
+/* AI 키 안내 */
+.guide{max-width:820px;margin:0 auto}
+.guide .lead{font-size:16px}
+.gstep{display:grid;grid-template-columns:44px 1fr;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0}
+.gstep .n{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center}
+.gstep h3{margin:0 0 4px;font-size:16px}
+.gstep p{margin:0;color:#333}
+.kbd{display:inline-block;border:1px solid #c3cad3;border-bottom-width:2px;border-radius:6px;padding:0 6px;background:#fafbfc;font-weight:700;font-size:13.5px}
+.notebox{background:#fff;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:14.5px}
+.keyrow{display:flex;gap:8px}
+.keyrow input{flex:1;font-family:Consolas,monospace}
+.keyrow input::placeholder{font-family:'Malgun Gothic','맑은 고딕',sans-serif}
+@media (max-width:1100px){.make{grid-template-columns:1fr}.preview{position:static}.pv-scroll{max-height:none}}
+@media (max-width:560px){.types{grid-template-columns:1fr}.app-head h1 small{display:none}}
+</style>
+</head>
+<body>
+<header class="app-head">
+  <h1>세일고 가정통신문 도우미 <small>작성 → 배포 → PDF 저장·메일</small></h1>
+  <button type="button" class="btn sm" id="btnNew2" title="새 가정통신문 만들기">＋ 새 통신문</button>
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn" role="tab" aria-selected="true" data-tab="make">가정통신문 만들기</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="key">AI 키 등록 방법</button>
+  </nav>
+</header>
+
+<main>
+<!-- ================= 만들기 ================= -->
+<section id="tab-make">
+  <div class="make">
+    <div class="form">
+      <div class="restore" id="restoreBar" hidden>작성하던 내용을 이어서 불러왔어요. <button type="button" class="btn sm" id="btnNew">새로 시작</button></div>
+
+      <details class="card" id="pastCard">
+        <summary style="cursor:pointer;font-weight:700">지난 통신문 불러오기 · 회신 현황</summary>
+        <div class="hint" style="font-size:13px;color:var(--sub);margin-top:6px">배포한 통신문을 불러와 고친 뒤 다시 배포하면 이미 보낸 주소·QR코드 그대로 내용만 바뀌어요. 아래 '교사 확인 번호'가 필요해요.</div>
+        <div class="btns" style="margin-top:8px"><button type="button" class="btn sm" id="btnPast">목록 보기</button></div>
+        <ul class="past" id="pastList" hidden></ul>
+      </details>
+
+      <div class="card">
+        <h2><span class="no">1</span>어떤 가정통신문인가요?</h2>
+        <div class="types" role="radiogroup" aria-label="가정통신문 형태">
+          <label class="type"><input type="radio" name="ntype" value="info" checked><b>안내형</b><span>알리기만 하는 통신문<br>(행사·평가 안내 등)</span></label>
+          <label class="type"><input type="radio" name="ntype" value="reply"><b>회신형</b><span>동의서·신청서를 받는 통신문<br>(학생·보호자 서명)</span></label>
+          <label class="type"><input type="radio" name="ntype" value="pay"><b>납입고지형</b><span>급식비·체험학습비 등<br>납부 안내</span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="no">2</span>기본 정보</h2>
+        <div class="field"><label for="title">제목</label>
+          <input type="text" id="title" maxlength="80" placeholder="예) 2026학년도 천체관측 활동 안내">
+          <div class="hint">제목을 입력하면 아래 인사말과 본문이 날짜·계절에 맞게 자동으로 채워져요.</div></div>
+        <div class="field row">
+          <div><label class="lab" for="date">발행일</label><input type="date" id="date"></div>
+          <div><label class="lab" for="email">작성 교사 메일</label><input type="email" id="email" placeholder="PDF와 QR코드를 받을 메일 주소" autocomplete="email"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="no">3</span>내용</h2>
+        <div class="btns">
+          <button type="button" class="btn" id="btnDefaults">제목에 맞춰 기본 문장 다시 넣기</button>
+          <button type="button" class="btn ai" id="btnAI">✨ AI로 초안 다듬기</button>
+          <span class="chip" id="aiChip">AI 확인 중</span>
+        </div>
+        <div class="field"><label for="greeting">인사말</label><textarea id="greeting" rows="3"></textarea></div>
+        <div class="field"><label for="body">안내 문단</label><textarea id="body" rows="3"></textarea></div>
+        <div class="field"><label for="items">세부 항목</label><textarea id="items" rows="6"></textarea>
+          <div class="hint">한 줄에 한 항목씩 적으면 번호가 자동으로 붙어요. 줄 앞에 <b>띄어쓰기 2칸</b>을 넣으면 하위 항목, <b>※</b>로 시작하면 참고 문구가 돼요.</div>
+          <div class="row" style="margin-top:6px;max-width:330px"><label class="lab" for="numStyle" style="flex:0 0 auto;margin:0">번호 형식</label>
+            <select id="numStyle"><option value="1">1. → 가.</option><option value="ga">가. → 1)</option></select></div></div>
+        <div class="field"><label for="table">표 <span style="font-weight:400;color:var(--sub)">(필요할 때만)</span></label><textarea id="table" rows="3" placeholder="엑셀이나 한글 표를 복사해 붙여 넣거나, 칸을 | 로 나눠 적으세요. 첫 줄은 제목 줄이에요."></textarea></div>
+        <div class="field"><label for="closing">마무리 문장</label><input type="text" id="closing"></div>
+        <div class="field"><label for="contact">문의처 <span style="font-weight:400;color:var(--sub)">(선택)</span></label><input type="text" id="contact" placeholder="예) 문의 : 정보과학부 032-000-0000"></div>
+      </div>
+
+      <div class="card" id="replyCard" hidden>
+        <h2><span class="no">4</span>회신서(동의서·신청서)</h2>
+        <div class="field"><label for="rtitle">회신서 제목</label><input type="text" id="rtitle" maxlength="60"></div>
+        <div class="field"><label for="rtext">동의 문장</label><textarea id="rtext" rows="2"></textarea></div>
+        <div class="field row">
+          <div><label class="lab" for="roptions">선택지 <span style="font-weight:400;color:var(--sub)">(한 줄에 하나)</span></label><textarea id="roptions" rows="2"></textarea></div>
+          <div><label class="lab" for="rfields">더 받을 내용 <span style="font-weight:400;color:var(--sub)">(선택)</span></label><textarea id="rfields" rows="2" placeholder="예) 건강상 유의 사항(지병·약·알레르기 등)"></textarea></div>
+        </div>
+        <div class="field row">
+          <div><label class="lab" for="rdeadline">회신 기한</label><input type="date" id="rdeadline"></div>
+          <div><label class="check"><input type="checkbox" id="rphone" checked> 보호자 연락처도 받기</label></div>
+        </div>
+        <div class="hint" style="margin-top:8px">회신서에는 학년·반·번호, 학생 이름, 보호자 이름과 학생·보호자 서명 칸이 자동으로 들어가요.</div>
+      </div>
+
+      <div class="card">
+        <h2><span class="no" id="pubNo">4</span>완성하고 배포하기</h2>
+        <div class="field"><label for="code">교사 확인 번호</label>
+          <input type="password" id="code" maxlength="30" autocomplete="off" placeholder="학교에서 정한 번호">
+          <div class="hint">배포하면 ① 가정용 웹페이지 주소가 만들어지고 ② PDF가 구글 드라이브 '세일고등학교 › 가정통신문' 폴더에 저장되며 ③ 입력한 메일로 PDF와 가정용 QR코드가 전송돼요.</div></div>
+        <div class="btns" style="margin-top:12px">
+          <button type="button" class="btn primary" id="btnPublish">완성하고 배포하기</button>
+          <button type="button" class="btn" id="btnPdf">PDF 미리 내려받기</button>
+        </div>
+        <ol class="steps-run" id="runSteps" hidden>
+          <li data-step="save">가정용 웹페이지 만들기</li>
+          <li data-step="pdf">PDF 만들기</li>
+          <li data-step="qr">메일로 보낼 QR코드 만들기</li>
+          <li data-step="upload">드라이브 저장·메일 보내기</li>
+        </ol>
+        <div id="pubStatus"></div>
+        <div class="result" id="result" hidden>
+          <div class="links">
+            <div><b>가정에 보낼 주소</b></div>
+            <div class="copy"><input type="text" id="resUrl" readonly><button type="button" class="btn sm" id="btnCopy">복사</button></div>
+            <div class="btns"><a class="btn sm" id="resPdf" target="_blank" rel="noopener">드라이브 PDF 열기</a><a class="btn sm" id="resOpen" target="_blank" rel="noopener">가정용 화면 보기</a><a class="btn sm" id="resSheet" target="_blank" rel="noopener" hidden>회신 현황 보기</a></div>
+            <div id="resMail" class="hint"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="pv-bar"><span class="info" id="pvInfo">미리보기</span>
+        <button type="button" class="btn sm" id="zoomOut" aria-label="작게">－</button>
+        <button type="button" class="btn sm" id="zoomFit">화면 맞춤</button>
+        <button type="button" class="btn sm" id="zoomIn" aria-label="크게">＋</button>
+      </div>
+      <div class="pv-scroll" id="pvScroll"><div class="pv-sizer" id="pvSizer"><div class="pv-scale" id="pvScale"><div id="pvHost"></div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AI 키 등록 안내 ================= -->
+<section id="tab-key" hidden>
+  <div class="guide">
+    <p class="lead"><b>AI 초안 기능</b>을 쓰려면 구글이 무료로 주는 <b>Gemini API 키</b>가 한 번만 필요해요. 3분이면 끝나요.</p>
+
+    <div class="gstep"><div class="n">1</div><div><h3>구글 AI 스튜디오 열기</h3>
+      <p>아래 버튼을 누르면 새 창이 열려요. <b>개인 gmail 계정</b>으로 로그인하세요. (학교 계정은 사용이 막혀 있을 수 있어요.)</p>
+      <p style="margin-top:8px"><a class="btn primary" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">구글 AI 스튜디오 열기 ↗</a></p></div></div>
+
+    <div class="gstep"><div class="n">2</div><div><h3>처음이라면 약관에 동의하기</h3>
+      <p>처음 들어가면 이용 약관 창이 나와요. 동의 칸에 체크하고 <span class="kbd">계속</span>을 누르세요. 처음이 아니면 이 단계는 건너뛰어요.</p></div></div>
+
+    <div class="gstep"><div class="n">3</div><div><h3>API 키 만들기</h3>
+      <p>화면에서 <span class="kbd">API 키 만들기</span> (영문 화면이면 <span class="kbd">Create API key</span>) 버튼을 누르세요.
+      프로젝트를 고르라는 창이 나오면 목록의 첫 번째 프로젝트를 고르거나 <span class="kbd">새 프로젝트에서 만들기</span>를 누르면 돼요.</p></div></div>
+
+    <div class="gstep"><div class="n">4</div><div><h3>키 복사하기</h3>
+      <p><b>AIza</b>로 시작하는 긴 글자(키)가 만들어지면 옆의 <span class="kbd">복사</span> 버튼을 누르세요.</p></div></div>
+
+    <div class="gstep"><div class="n">5</div><div><h3>여기에 붙여 넣으면 끝!</h3>
+      <p>아래 칸에 붙여 넣고(<span class="kbd">Ctrl</span>+<span class="kbd">V</span>) <span class="kbd">저장하고 확인</span>을 누르세요.</p>
+      <div class="keyrow" style="margin-top:8px"><input type="password" id="apiKey" placeholder="AIza로 시작하는 키" autocomplete="off" spellcheck="false">
+        <button type="button" class="btn sm" id="keyShow">보기</button></div>
+      <div class="btns" style="margin-top:8px"><button type="button" class="btn primary" id="keySave">저장하고 확인</button><button type="button" class="btn" id="keyDel">키 지우기</button></div>
+      <div id="keyStatus"></div></div></div>
+
+    <div class="notebox"><b>정말 무료인가요?</b><br>카드 등록 없이 무료로 쓸 수 있어요. 결제(Billing)를 따로 설정하지 않으면 요금이 나오지 않아요. 무료 사용에는 하루·1분당 횟수 제한이 있어서, 너무 자주 누르면 잠시 뒤에 다시 해야 할 수 있어요.</div>
+    <div class="notebox"><b>키는 어디에 저장되나요?</b><br>지금 쓰는 컴퓨터의 브라우저에만 저장되고, 학교 서버나 다른 사람에게 보내지 않아요. 키는 비밀번호와 같으니 다른 사람과 나누지 마세요. 다른 컴퓨터에서 쓸 때는 같은 키를 다시 붙여 넣으면 돼요.</div>
+    <div class="notebox"><b>키가 없어도 되나요?</b><br>네. AI 키가 없어도 제목·날짜·계절에 맞춘 기본 문장은 자동으로 채워져요. AI 키는 문장을 더 자연스럽게 다듬을 때만 써요.</div>
+  </div>
+</section>
+</main>
+
+<div class="ask" id="ask" hidden><div class="ask-box" role="alertdialog" aria-modal="true" aria-labelledby="askMsg"><p id="askMsg"></p>
+  <div class="btns"><button type="button" class="btn" id="askNo">취소</button><button type="button" class="btn primary" id="askYes">확인</button></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>window.API_URL = 'https://script.google.com/macros/s/AKfycby6hyj7GkVLLW0-CaPQ-SnRbKkd-k3l9xRBzleEwrfwTGJgpQ5bjHcAqlaud_2Q17Pa/exec'; window.PRELOAD = '__PRELOAD__'; if (typeof window.PRELOAD === 'string') window.PRELOAD = null;</script>
+<script>
+var ND_CSS = "/* ===== 가정통신문 문서 양식 (세일고등학교) ===== */\n.nd{--nd-gray:#808080;--nd-muted:#595959;--nd-hdr:#e7e6e6;--nd-lbl:#f2f2f2;\n  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;\n  color:#111;font-size:11pt;line-height:1.56;-webkit-print-color-adjust:exact;print-color-adjust:exact}\n.nd *{box-sizing:border-box}\n:where(.nd) p{margin:0}\n.nd img{display:block;max-width:100%}\n\n/* 종이(A4) 한 쪽 */\n.nd-page{width:210mm;height:297mm;padding:9mm 20mm 8mm;background:#fff;overflow:hidden;position:relative}\n.nd-inner > :first-child{margin-top:0 !important}\n\n/* 머리 부분 */\n.nd-top{display:flex;justify-content:flex-end;min-height:9.3mm}\n.nd-top img{width:55.6mm;height:auto}\n.nd-site{font-size:9pt;line-height:1.3;margin:1mm 0 .8mm}\n.nd-hdr{display:grid;grid-template-columns:20fr 37fr 62fr 51fr;border-top:2.25pt solid var(--nd-gray);\n  border-bottom:2.25pt solid var(--nd-gray);min-height:21mm}\n.nd-hdr > div{display:flex;align-items:center;justify-content:center;padding:0 1.5mm}\n.nd-hdr-emblem img{width:16.9mm;height:auto}\n.nd-hdr-school{flex-direction:column;align-items:flex-start !important;border-right:1pt solid var(--nd-gray);line-height:1.35}\n.nd-hdr-school .m{font-size:9pt}\n.nd-hdr-school .s{font-size:14pt;font-weight:700}\n.nd-hdr-title{background:var(--nd-hdr);border-right:1pt solid var(--nd-gray);white-space:nowrap;font-size:24pt;font-weight:700;line-height:1.2}\n.nd-hdr-slogan img{width:46.6mm;height:auto}\n.nd-title{font-size:16pt;font-weight:700;text-align:center;line-height:1.4;margin:4mm 0 2.5mm;word-break:keep-all}\n\n/* 본문 */\n.nd-p{text-align:justify;word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}\n.nd-p + .nd-p{margin-top:0}\n.nd-gap{height:2.4mm}\n.nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}\n.nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}\n.nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}\n.nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}\n.nd-item.plain{padding-left:3mm}\n.nd-table-wrap{margin:2mm 0 1mm}\n.nd-table{width:100%;border-collapse:collapse;table-layout:auto;font-size:10pt;line-height:1.4}\n.nd-table th,.nd-table td{border:.75pt solid #000;padding:1.2mm 1.5mm;text-align:center;vertical-align:middle;word-break:keep-all}\n.nd-table th{background:var(--nd-lbl);font-weight:700}\n.nd-closing{margin-top:2.4mm}\n.nd-contact{text-align:center;margin-top:3mm;font-size:10.5pt}\n\n/* 날짜·학교장 */\n.nd-sign{position:relative;margin-top:5mm;padding-bottom:1mm}\n.nd-date{font-size:14pt;text-align:center;line-height:1.4}\n.nd-principal{font-size:20pt;font-weight:700;text-align:center;letter-spacing:3pt;line-height:1.45}\n\n/* 절취선·회신서 */\n.nd-slipwrap{margin-top:5mm}\n.nd-cut{display:flex;align-items:center;gap:2.5mm;font-size:9pt;color:var(--nd-muted);letter-spacing:2pt;line-height:1.3;margin:0 0 3.5mm}\n.nd-cut::before,.nd-cut::after{content:\"\";flex:1;border-top:1px dashed #7a7a7a}\n.nd-slip-title{font-size:15pt;font-weight:700;text-align:center;line-height:1.4;margin:0 0 2mm;word-break:keep-all}\n.nd-slip-table{width:100%;border-collapse:collapse;table-layout:fixed}\n.nd-slip-table th,.nd-slip-table td{border:.75pt solid #000;height:9mm;padding:0 1.5mm;vertical-align:middle;text-align:center}\n.nd-slip-table th{background:var(--nd-lbl);font-size:10.5pt;font-weight:700;line-height:1.3;word-break:keep-all}\n.nd-slip-table th small{display:block;font-size:8.5pt;font-weight:400}\n.nd-slip-table td.tall{height:13mm}\n.nd-slip-table td.ex{text-align:left;white-space:pre-wrap;font-size:10pt;line-height:1.4;padding:1mm 2mm}\n.nd-slip-table .cls{white-space:nowrap;letter-spacing:.5pt}\n.nd-slip-text{margin-top:2.4mm;text-align:justify;word-break:keep-all;white-space:pre-wrap}\n.nd-options{display:flex;justify-content:center;flex-wrap:wrap;gap:2mm 9mm;font-size:12pt;margin:1.5mm 0}\n.nd-opt{display:inline-flex;align-items:center;gap:1.6mm}\n.nd-box{display:inline-flex;align-items:center;justify-content:center;width:.95em;height:.95em;border:1.2px solid #222;line-height:1}\n.nd-slip-date{text-align:right;margin-top:2mm;white-space:pre}\n.nd-sline{display:flex;justify-content:flex-end;align-items:center;min-height:8mm}\n.nd-sline .lb{white-space:nowrap}\n.nd-sline .nm{display:inline-block;width:32mm;padding-left:4mm;white-space:nowrap;overflow:hidden}\n.nd-sline .mk{position:relative;white-space:nowrap}\n.nd-sline .sig{position:absolute;right:-3mm;top:50%;transform:translateY(-50%);width:24mm;height:9mm;max-width:none;object-fit:contain}\n.nd-slip-note{font-size:9.5pt;color:#333;margin-top:1.5mm}\n\n/* ===== 화면에서 흐르는 형태(가정용) ===== */\n.nd-flow{background:#fff}\n.nd-flow .nd-sheet{container-type:inline-size}\n.nd-flow .nd-top img{width:32.7cqw}\n.nd-flow .nd-hdr{min-height:12.35cqw}\n.nd-flow .nd-hdr > div{padding:0 .88cqw}\n.nd-flow .nd-hdr-emblem img{width:9.95cqw}\n.nd-flow .nd-hdr-school .m{font-size:1.87cqw}\n.nd-flow .nd-hdr-school .s{font-size:2.9cqw}\n.nd-flow .nd-hdr-title{font-size:4.98cqw}\n.nd-flow .nd-hdr-slogan img{width:27.4cqw}\n";
+/* ===== 가정통신문 공통: 기본 문장, 문서 만들기, A4 쪽 나누기 ===== */
+var ND = (function () {
+  'use strict';
+  var SCHOOL = {
+    site: 'https://seilhs.icehs.kr',
+    name: '세일고등학교',
+    motto: '꿈이 이루어지는 학교',
+    principal: '세 일 고 등 학 교 장',
+    adminPhone: '032)515-0971'
+  };
+  var DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+  var GANADA = '가나다라마바사아자차카타파하';
+
+  /* ---------- 작은 도구 ---------- */
+  function h(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v == null || v === false) return;
+      if (k === 'class') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k === 'style') e.setAttribute('style', v);
+      else e.setAttribute(k, v === true ? '' : v);
+    });
+    (kids || []).forEach(function (c) { if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function toISO(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+  function parseISO(s) {
+    var m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(s || ''));
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date();
+  }
+  function addDays(iso, n) { var d = parseISO(iso); d.setDate(d.getDate() + n); return toISO(d); }
+  function fmtDate(iso) { var d = parseISO(iso); return d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.'; }
+  function fmtDay(iso) { var d = parseISO(iso); return fmtDate(iso) + '(' + DAYS[d.getDay()] + ')'; }
+  function fmtMD(iso) { var d = parseISO(iso); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일(' + DAYS[d.getDay()] + ')'; }
+
+  /* 받침 유무에 따라 조사 고르기: josa('활동', '을/를') */
+  function hasJong(word) {
+    var s = String(word || '').replace(/[\s)\]」』"'.]+$/, '');
+    if (!s) return false;
+    var c = s.charCodeAt(s.length - 1);
+    if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 !== 0;
+    return /[013678lmnLMN]$/.test(s);
+  }
+  function rieul(word) {
+    var s = String(word || '').trim(), c = s.charCodeAt(s.length - 1);
+    return c >= 0xac00 && c <= 0xd7a3 && (c - 0xac00) % 28 === 8;
+  }
+  function josa(word, pair) {
+    var p = pair.split('/');
+    if (pair === '으로/로') return word + (hasJong(word) && !rieul(word) ? '으로' : '로');
+    return word + (hasJong(word) ? p[0] : p[1]);
+  }
+
+  /* 제목에서 핵심어 뽑기: "2026학년도 천체관측 활동 안내" → "천체관측 활동" */
+  function subjectOf(title, type) {
+    var s = String(title || '').trim();
+    s = s.replace(/^\s*\d{4}\s*학년도\s*/, '');
+    s = s.replace(/\s*(실시\s*)?(안내문?|알림|공지|안내\s*및\s*회신)\s*$/, '');
+    if (type === 'pay') s = s.replace(/\s*(납입\s*)?고지\s*$/, '').replace(/\s*납입\s*$/, '');
+    s = s.trim();
+    return s || String(title || '').trim() || '행사';
+  }
+
+  function seasonLine(iso) {
+    var m = parseISO(iso).getMonth() + 1;
+    return {
+      1: '새해를 맞아 가정에 건강과 행복이 가득하시길 기원합니다.',
+      2: '한 학년을 마무리하는 2월, 가정에 평안이 가득하시길 기원합니다.',
+      3: '새 학년을 맞아 희망찬 출발을 하는 3월, 가정에 건강과 행복이 가득하시길 기원합니다.',
+      4: '따스한 봄기운이 가득한 4월, 가정에 평안과 행복이 함께하시길 기원합니다.',
+      5: '신록이 푸르른 5월, 가정에 사랑과 행복이 가득하시길 기원합니다.',
+      6: '초여름의 싱그러움이 느껴지는 6월, 가정에 건강과 평안이 함께하시길 기원합니다.',
+      7: '본격적인 무더위가 시작되는 7월, 가정에 건강과 평안이 함께하시길 기원합니다.',
+      8: '여름의 끝자락에서 가정에 건강과 평안이 함께하시길 기원합니다.',
+      9: '선선한 바람이 부는 9월, 가정에 평안과 행복이 가득하시길 기원합니다.',
+      10: '결실의 계절 10월, 가정에 풍성함과 행복이 가득하시길 기원합니다.',
+      11: '쌀쌀한 바람이 부는 11월, 환절기 건강에 유의하시고 가정에 평안이 함께하시길 기원합니다.',
+      12: '한 해를 마무리하는 12월, 가정에 따뜻함과 행복이 가득하시길 기원합니다.'
+    }[m];
+  }
+  function seasonName(iso) {
+    var m = parseISO(iso).getMonth() + 1;
+    return m <= 2 || m === 12 ? '겨울' : m <= 5 ? '봄' : m <= 8 ? '여름' : '가을';
+  }
+
+  /* ---------- 형태별 기본 문장 ---------- */
+  function defaults(type, title, iso, deadlineISO) {
+    var subj = subjectOf(title, type);
+    var d = {};
+    var deadline = deadlineISO || addDays(iso, 5);
+    if (type === 'pay') {
+      d.greeting = '학부모님 댁내 평안하심을 기원합니다.';
+      d.body = '아뢰올 말씀은 ' + josa(subj, '을/를') + ' 아래와 같이 납입고지 하오니 기일 내 CMS통장에 입금 또는 신용카드 결제계좌로 입금하여 주시기 바랍니다.';
+      d.items = '납입기한 : ' + fmtMD(addDays(iso, 7)) + ' ~ ' + fmtMD(addDays(iso, 10)) + '까지\n' +
+        '납입금액 : 아래 표와 같음\n' +
+        '납입방법 : 신용카드 또는 개별 CMS 통장에서 인출일에 자동인출\n' +
+        '영수증이 필요하신 분은 본교 행정실이나 학교 홈페이지에서 발급받으실 수 있습니다.';
+      d.numStyle = 'ga';
+      d.table = '학년\t금액\t기간\t비고\n1학년\t\t\t\n2학년\t\t\t\n3학년\t\t\t';
+      d.closing = '';
+      d.contact = '문의전화 : ' + SCHOOL.adminPhone + '(행정실)';
+    } else {
+      d.greeting = '학부모님, 안녕하십니까?\n' + seasonLine(iso) + '\n항상 본교 교육에 깊은 관심과 성원을 보내주셔서 감사드립니다.';
+      if (type === 'reply') {
+        d.body = '본교에서는 ' + josa(subj, '을/를') + ' 다음과 같이 실시하고자 합니다. 내용을 확인하신 후 아래 회신서를 작성하여 ' +
+          fmtMD(deadline) + '까지 제출해 주시기 바랍니다.';
+      } else {
+        d.body = josa(subj, '과/와') + ' 관련하여 다음과 같이 안내해 드립니다. 가정에서도 내용을 확인하시어 자녀가 잘 준비할 수 있도록 지도해 주시기 바랍니다.';
+      }
+      d.items = '일시 : ' + fmtDay(addDays(iso, 7)) + '\n장소 : \n대상 : \n내용 : ';
+      d.numStyle = '1';
+      d.table = '';
+      d.closing = '학부모님의 많은 관심과 협조를 부탁드립니다.';
+      d.contact = '';
+    }
+    var r = { phone: true, fields: '', deadline: deadline, note: '' };
+    if (/신청/.test(subj)) {
+      r.title = subj.replace(/\s*신청$/, '') + ' 신청서';
+      r.text = '본인은 자녀의 ' + subj.replace(/\s*신청$/, '') + ' 신청 여부를 아래와 같이 회신합니다.';
+      r.options = '신청합니다.\n신청하지 않습니다.';
+    } else if (/희망|조사/.test(subj)) {
+      r.title = subj + '서';
+      r.text = '본인은 자녀의 ' + subj + '에 대하여 아래와 같이 회신합니다.';
+      r.options = '희망합니다.\n희망하지 않습니다.';
+    } else {
+      r.title = subj + ' 참가 동의서';
+      r.text = '본인은 자녀가 ' + subj + '에 참가하는 것에 대하여';
+      r.options = '동의합니다.\n동의하지 않습니다.';
+    }
+    d.reply = r;
+    return d;
+  }
+
+  /* ---------- 세부 항목 (줄마다 하나, 들여쓰기 = 하위 항목) ---------- */
+  function parseItems(text, style) {
+    var out = [], top = 0, sub = 0;
+    String(text || '').split(/\r?\n/).forEach(function (raw) {
+      if (!raw.trim()) return;
+      var indent = /^(\s{2,}|\t|\s*[-·•ㆍ]\s)/.test(raw);
+      var line = raw.trim().replace(/^[-·•ㆍ]\s*/, '');
+      if (/^[※*]/.test(line)) { out.push({ level: 'note', label: '※', text: line.replace(/^[※*]\s*/, '') }); return; }
+      if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: indent ? 'l2' : 'plain', label: '', text: line }); return; }
+      line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|[①-⑳])\s*/, '');
+      if (indent && top > 0) {
+        sub++;
+        out.push({ level: 'l2', label: style === 'ga' ? sub + ')' : GANADA.charAt((sub - 1) % 14) + '.', text: line });
+      } else {
+        top++; sub = 0;
+        out.push({ level: 'l1', label: style === 'ga' ? GANADA.charAt((top - 1) % 14) + '.' : top + '.', text: line });
+      }
+    });
+    return out;
+  }
+  /* 표: 엑셀·한글에서 복사(탭) 또는 | 로 구분 */
+  function parseTable(text) {
+    var lines = String(text || '').split(/\r?\n/).filter(function (l) { return l.trim(); });
+    if (!lines.length) return null;
+    var useTab = lines.some(function (l) { return l.indexOf('\t') >= 0; });
+    var rows = lines.map(function (l) {
+      var cells = useTab ? l.split('\t') : l.split('|');
+      if (!useTab) { if (cells[0].trim() === '') cells.shift(); if (cells.length && cells[cells.length - 1].trim() === '') cells.pop(); }
+      return cells.map(function (c) { return c.trim(); });
+    });
+    var n = Math.max.apply(null, rows.map(function (r) { return r.length; }));
+    rows.forEach(function (r) { while (r.length < n) r.push(''); });
+    return rows;
+  }
+  function paragraphs(text) {
+    var out = [];
+    String(text || '').split(/\r?\n/).forEach(function (l) { if (l.trim()) out.push(l.trim()); });
+    return out;
+  }
+
+  /* ---------- 문서 요소 ---------- */
+  function header(assets) {
+    var a = assets || {};
+    return [
+      h('div', { class: 'nd-top' }, [a.incheon ? h('img', { src: a.incheon, alt: '학생성공시대를 여는 인천교육' }) : null]),
+      h('div', { class: 'nd-site', text: SCHOOL.site }),
+      h('div', { class: 'nd-hdr' }, [
+        h('div', { class: 'nd-hdr-emblem' }, [a.emblem ? h('img', { src: a.emblem, alt: '세일고등학교 교표' }) : null]),
+        h('div', { class: 'nd-hdr-school' }, [h('div', { class: 'm', text: SCHOOL.motto }), h('div', { class: 's', text: SCHOOL.name })]),
+        h('div', { class: 'nd-hdr-title', text: '가 정 통 신 문' }),
+        h('div', { class: 'nd-hdr-slogan' }, [a.slogan ? h('img', { src: a.slogan, alt: '세일路, 미래路, 꿈꾸는 大路' }) : null])
+      ])
+    ];
+  }
+  function tableBlock(rows) {
+    var thead = h('thead', null, [h('tr', null, rows[0].map(function (c) { return h('th', { text: c }); }))]);
+    var tbody = h('tbody', null, rows.slice(1).map(function (r) {
+      return h('tr', null, r.map(function (c) { return h('td', { text: c }); }));
+    }));
+    return h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [thead, tbody])]);
+  }
+  function signBlock(doc) {
+    return h('div', { class: 'nd-sign' }, [h('p', { class: 'nd-date', text: fmtDate(doc.date) }), h('p', { class: 'nd-principal', text: SCHOOL.principal })]);
+  }
+  function slipBlock(doc, opts) {
+    var r = doc.reply || {}, ia = opts.interactive, fv = opts.filled || null;
+    var options = String(r.options || '').split(/\r?\n|,/).map(function (s) { return s.trim(); }).filter(Boolean);
+    var fields = String(r.fields || '').split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+    function inp(attrs) { return ia ? h('input', attrs) : null; }
+    function val(k) { return fv && fv[k] ? String(fv[k]) : ''; }
+    var clsCell;
+    if (ia) {
+      clsCell = h('td', { class: 'cls' }, [
+        h('select', { id: 'f-grade', 'aria-label': '학년' }, ['', '1', '2', '3'].map(function (g) { return h('option', { value: g, text: g || '-' }); })), h('span', { text: '학년' }),
+        h('input', { id: 'f-class', inputmode: 'numeric', maxlength: '2', autocomplete: 'off', 'aria-label': '반' }), h('span', { text: '반' }),
+        h('input', { id: 'f-num', inputmode: 'numeric', maxlength: '2', autocomplete: 'off', 'aria-label': '번호' }), h('span', { text: '번' })
+      ]);
+    } else if (fv && fv.grade) {
+      clsCell = h('td', { class: 'cls', text: fv.grade + '학년 ' + fv.cls + '반 ' + fv.num + '번' });
+    } else {
+      clsCell = h('td', { class: 'cls', text: '    학년     반     번' });
+    }
+    var rows = [
+      h('tr', null, [h('th', { text: '학년·반·번호' }), clsCell, h('th', { text: '학생 이름' }),
+        h('td', { text: ia ? null : val('sname') }, [inp({ id: 'f-sname', maxlength: '20', autocomplete: 'off', 'aria-label': '학생 이름' })])])
+    ];
+    if (r.phone) {
+      rows.push(h('tr', null, [h('th', { text: '보호자 이름' }), h('td', { text: ia ? null : val('pname') }, [inp({ id: 'f-pname', maxlength: '20', autocomplete: 'off', 'aria-label': '보호자 이름' })]),
+        h('th', { text: '보호자 연락처' }), h('td', { text: ia ? null : val('phone') }, [inp({ id: 'f-phone', type: 'tel', inputmode: 'tel', maxlength: '13', placeholder: '010-0000-0000', autocomplete: 'off', 'aria-label': '보호자 연락처' })])]));
+    } else {
+      rows.push(h('tr', null, [h('th', { text: '보호자 이름' }), h('td', { colspan: '3', text: ia ? null : val('pname') }, [inp({ id: 'f-pname', maxlength: '20', autocomplete: 'off', 'aria-label': '보호자 이름' })])]));
+    }
+    fields.forEach(function (f, i) {
+      var mm = /^(.*?)\s*(\(.*\))\s*$/.exec(f);
+      var th = mm ? h('th', null, [mm[1], h('small', { text: mm[2] })]) : h('th', { text: f });
+      var ex = fv && fv.extras ? String(fv.extras[i] || '') : '';
+      rows.push(h('tr', null, [th, h('td', { colspan: '3', class: 'tall' + (ex ? ' ex' : ''), text: ia ? null : ex },
+        [ia ? h('textarea', { id: 'f-extra-' + i, 'data-label': f, maxlength: '300', rows: '2', 'aria-label': f }) : null])]));
+    });
+    var table = h('table', { class: 'nd-slip-table' }, [
+      h('colgroup', null, [h('col', { style: 'width:21%' }), h('col', { style: 'width:29%' }), h('col', { style: 'width:20%' }), h('col', { style: 'width:30%' })]),
+      h('tbody', null, rows)
+    ]);
+    var opts2 = h('div', { class: 'nd-options', id: ia ? 'f-options' : null, role: ia ? 'radiogroup' : null, 'aria-label': ia ? '선택' : null },
+      options.map(function (o) {
+        return ia ? h('label', { class: 'nd-opt' }, [h('input', { type: 'radio', name: 'f-choice', value: o }), h('span', { class: 'nd-box' }), h('span', { text: o })])
+          : h('span', { class: 'nd-opt' }, [h('span', { class: 'nd-box', text: fv && fv.choice === o ? '✓' : '' }), o]);
+      }));
+    function sline(who, label) {
+      var sig = fv && fv.sig ? fv.sig[who] : '';
+      var name = !ia && fv ? val(who === 'student' ? 'sname' : 'pname') : '';
+      return h('div', { class: 'nd-sline' }, [
+        h('span', { class: 'lb', text: label + ' :' }), h('span', { class: 'nm', id: ia ? 'm-' + who : null, text: name || null }),
+        h('span', { class: 'mk' }, ['(서명)',
+          ia ? h('button', { type: 'button', class: 'sig-slot', 'data-who': who, 'aria-label': label + ' 서명하기' },
+            [h('img', { alt: '' }), h('span', { class: 'ph', text: '눌러서 서명' })])
+            : (sig ? h('img', { class: 'sig', src: sig, alt: label + ' 서명' }) : null)])
+      ]);
+    }
+    var dateText = ia ? fmtDate(toISO(new Date())) : fv && fv.date ? fmtDate(fv.date) : parseISO(doc.date).getFullYear() + '.      .      .';
+    var kids = [
+      h('div', { class: 'nd-cut', 'aria-hidden': 'true', text: '절 취 선' }),
+      h('p', { class: 'nd-slip-title', text: r.title || '회신서' }),
+      table,
+      r.text ? h('p', { class: 'nd-slip-text', text: r.text }) : null,
+      options.length ? opts2 : null,
+      h('p', { class: 'nd-slip-date', id: ia ? 'f-date' : null, text: dateText }),
+      sline('student', '학생'), sline('parent', '보호자'),
+      r.deadline ? h('p', { class: 'nd-slip-note', text: '※ 회신 기한: ' + fmtDay(r.deadline) + '까지' }) : null
+    ];
+    return h('div', { class: 'nd-slipwrap', id: ia ? 'slip' : null }, kids);
+  }
+
+  /* 본문 블록 목록 (쪽 나누기 단위) */
+  function blocks(doc, opts) {
+    var out = [];
+    paragraphs(doc.greeting).forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
+    var body = paragraphs(doc.body);
+    if (body.length) {
+      if (out.length) out.push(h('div', { class: 'nd-gap' }));
+      body.forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
+    }
+    var items = parseItems(doc.items, doc.numStyle);
+    if (items.length) {
+      out.push(h('div', { class: 'nd-gap' }));
+      items.forEach(function (it) {
+        out.push(h('div', { class: 'nd-item ' + it.level, text: (it.label ? it.label + ' ' : '') + it.text }));
+      });
+    }
+    var rows = parseTable(doc.table);
+    if (rows) out.push(tableBlock(rows));
+    paragraphs(doc.closing).forEach(function (t, i) { out.push(h('p', { class: 'nd-p' + (i === 0 ? ' nd-closing' : ''), text: t })); });
+    if (String(doc.contact || '').trim()) out.push(h('p', { class: 'nd-contact', text: doc.contact.trim() }));
+    out.push(signBlock(doc));
+    if (doc.type === 'reply') out.push(slipBlock(doc, opts));
+    return out;
+  }
+
+  /* ---------- 흐르는 문서(가정용 화면) ---------- */
+  function renderFlow(doc, assets, host, opts) {
+    opts = opts || {};
+    host.innerHTML = '';
+    var sheet = h('div', { class: 'nd-sheet' }, header(assets).concat([h('h1', { class: 'nd-title', text: doc.title })], blocks(doc, opts)));
+    var root = h('div', { class: 'nd nd-flow' }, [sheet]);
+    host.appendChild(root);
+    return root;
+  }
+
+  /* ---------- A4 쪽 나누기(미리보기·PDF) ---------- */
+  function paginate(doc, assets, host, opts) {
+    opts = opts || {};
+    var stage = h('div', { class: 'nd', style: 'position:absolute;left:-30000px;top:0;width:210mm' });
+    document.body.appendChild(stage);
+    var pages = [], page, inner;
+    function newPage(first) {
+      page = h('div', { class: 'nd-page' });
+      if (first) {
+        header(assets).forEach(function (e) { page.appendChild(e); });
+        page.appendChild(h('h1', { class: 'nd-title', text: doc.title }));
+      } else {
+        page.appendChild(h('div', { class: 'nd-top' }, [assets && assets.incheon ? h('img', { src: assets.incheon, alt: '' }) : null]));
+      }
+      inner = h('div', { class: 'nd-inner' });
+      page.appendChild(inner);
+      stage.appendChild(page);
+      pages.push(page);
+    }
+    function over() {
+      var limit = page.getBoundingClientRect().bottom - parseFloat(getComputedStyle(page).paddingBottom);
+      var last = inner.lastElementChild;
+      if (!last) return false;
+      var mb = parseFloat(getComputedStyle(last).marginBottom) || 0;
+      return last.getBoundingClientRect().bottom + mb > limit + 0.5;
+    }
+    function placeTable(wrap) {
+      var head = wrap.querySelector('thead'), rows = Array.prototype.slice.call(wrap.querySelectorAll('tbody tr'));
+      while (rows.length) {
+        var part = h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [head.cloneNode(true), h('tbody')])]);
+        var tb = part.querySelector('tbody');
+        inner.appendChild(part);
+        var placed = 0;
+        while (rows.length) {
+          tb.appendChild(rows[0]);
+          if (over()) { tb.removeChild(rows[0]); break; }
+          rows.shift(); placed++;
+        }
+        if (!placed) {
+          inner.removeChild(part);
+          if (inner.children.length) { newPage(false); continue; }
+          inner.appendChild(part); tb.appendChild(rows.shift());   // 한 줄도 안 들어가면 그대로 둠
+        }
+        if (rows.length) newPage(false);
+      }
+    }
+    newPage(true);
+    blocks(doc, opts).forEach(function (b) {
+      inner.appendChild(b);
+      if (!over()) return;
+      inner.removeChild(b);
+      if (b.classList.contains('nd-table-wrap')) { placeTable(b); return; }
+      if (inner.children.length) newPage(false);
+      inner.appendChild(b);
+    });
+    stage.parentNode.removeChild(stage);
+    host.innerHTML = '';
+    var wrap = h('div', { class: 'nd nd-pages' }, pages);
+    host.appendChild(wrap);
+    return pages;
+  }
+
+  /* 그림 둘레의 빈 여백(투명·흰색) 잘라내기 → Promise<dataURL> */
+  function trimImage(src, maxW) {
+    return new Promise(function (resolve) {
+      if (!src) { resolve(''); return; }
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var w = img.naturalWidth, hgt = img.naturalHeight, cv = document.createElement('canvas');
+          cv.width = w; cv.height = hgt;
+          var g = cv.getContext('2d'); g.drawImage(img, 0, 0);
+          var d = g.getImageData(0, 0, w, hgt).data, x0 = w, y0 = hgt, x1 = -1, y1 = -1;
+          for (var y = 0; y < hgt; y++) for (var x = 0; x < w; x++) {
+            var i = (y * w + x) * 4;
+            if (d[i + 3] > 20 && (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240)) {
+              if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+            }
+          }
+          if (x1 < 0) { resolve(src); return; }
+          var pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.01) + 1;
+          x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(w - 1, x1 + pad); y1 = Math.min(hgt - 1, y1 + pad);
+          var cw = x1 - x0 + 1, ch = y1 - y0 + 1, s = maxW && cw > maxW ? maxW / cw : 1;
+          var out = document.createElement('canvas');
+          out.width = Math.round(cw * s); out.height = Math.round(ch * s);
+          var o = out.getContext('2d');
+          o.fillStyle = '#fff'; o.fillRect(0, 0, out.width, out.height);
+          o.drawImage(cv, x0, y0, cw, ch, 0, 0, out.width, out.height);
+          resolve(out.toDataURL('image/png'));
+        } catch (e) { resolve(src); }
+      };
+      img.onerror = function () { resolve(''); };
+      img.src = src;
+    });
+  }
+
+  return {
+    SCHOOL: SCHOOL, h: h, trimImage: trimImage, toISO: toISO, parseISO: parseISO, addDays: addDays, fmtDate: fmtDate, fmtDay: fmtDay,
+    fmtMD: fmtMD, josa: josa, subjectOf: subjectOf, seasonLine: seasonLine, seasonName: seasonName,
+    defaults: defaults, parseItems: parseItems, parseTable: parseTable,
+    renderFlow: renderFlow, paginate: paginate
+  };
+})();
+
+/* ===== QR 코드 생성기 (바이트 모드, 버전 1~20, 오류 정정 L/M/Q/H) ===== */
+var QR = (function () {
+  'use strict';
+  // [블록수, 전체 코드워드, 데이터 코드워드, (블록수2, 전체2, 데이터2)]  순서: L, M, Q, H
+  var RS = [
+    null,
+    [[1, 26, 19], [1, 26, 16], [1, 26, 13], [1, 26, 9]],
+    [[1, 44, 34], [1, 44, 28], [1, 44, 22], [1, 44, 16]],
+    [[1, 70, 55], [1, 70, 44], [2, 35, 17], [2, 35, 13]],
+    [[1, 100, 80], [2, 50, 32], [2, 50, 24], [4, 25, 9]],
+    [[1, 134, 108], [2, 67, 43], [2, 33, 15, 2, 34, 16], [2, 33, 11, 2, 34, 12]],
+    [[2, 86, 68], [4, 43, 27], [4, 43, 19], [4, 43, 15]],
+    [[2, 98, 78], [4, 49, 31], [2, 32, 14, 4, 33, 15], [4, 39, 13, 1, 40, 14]],
+    [[2, 121, 97], [2, 60, 38, 2, 61, 39], [4, 40, 18, 2, 41, 19], [4, 40, 14, 2, 41, 15]],
+    [[2, 146, 116], [3, 58, 36, 2, 59, 37], [4, 36, 16, 4, 37, 17], [4, 36, 12, 4, 37, 13]],
+    [[2, 86, 68, 2, 87, 69], [4, 69, 43, 1, 70, 44], [6, 43, 19, 2, 44, 20], [6, 43, 15, 2, 44, 16]],
+    [[4, 101, 81], [1, 80, 50, 4, 81, 51], [4, 50, 22, 4, 51, 23], [3, 36, 12, 8, 37, 13]],
+    [[2, 116, 92, 2, 117, 93], [6, 58, 36, 2, 59, 37], [4, 46, 20, 6, 47, 21], [7, 42, 14, 4, 43, 15]],
+    [[4, 133, 107], [8, 59, 37, 1, 60, 38], [8, 44, 20, 4, 45, 21], [12, 33, 11, 4, 34, 12]],
+    [[3, 145, 115, 1, 146, 116], [4, 64, 40, 5, 65, 41], [11, 36, 16, 5, 37, 17], [11, 36, 12, 5, 37, 13]],
+    [[5, 109, 87, 1, 110, 88], [5, 65, 41, 5, 66, 42], [5, 54, 24, 7, 55, 25], [11, 36, 12, 7, 37, 13]],
+    [[5, 122, 98, 1, 123, 99], [7, 73, 45, 3, 74, 46], [15, 43, 19, 2, 44, 20], [3, 45, 15, 13, 46, 16]],
+    [[1, 135, 107, 5, 136, 108], [10, 74, 46, 1, 75, 47], [1, 50, 22, 15, 51, 23], [2, 42, 14, 17, 43, 15]],
+    [[5, 150, 120, 1, 151, 121], [9, 69, 43, 4, 70, 44], [17, 50, 22, 1, 51, 23], [2, 42, 14, 19, 43, 15]],
+    [[3, 141, 113, 4, 142, 114], [3, 70, 44, 11, 71, 45], [17, 47, 21, 4, 48, 22], [9, 39, 13, 16, 40, 14]],
+    [[3, 135, 107, 5, 136, 108], [3, 67, 41, 13, 68, 42], [15, 54, 24, 5, 55, 25], [15, 43, 15, 10, 44, 16]]
+  ];
+  var ALIGN = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46],
+    [6, 28, 50], [6, 30, 54], [6, 32, 58], [6, 34, 62], [6, 26, 46, 66], [6, 26, 48, 70], [6, 26, 50, 74],
+    [6, 30, 54, 78], [6, 30, 56, 82], [6, 30, 58, 86], [6, 34, 62, 90]];
+  var REMAINDER = [0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3];
+  var ECL = { L: 0, M: 1, Q: 2, H: 3 };
+  var ECL_BITS = { L: 1, M: 0, Q: 3, H: 2 };
+
+  /* GF(256) */
+  var EXP = new Array(512), LOG = new Array(256);
+  (function () {
+    var x = 1;
+    for (var i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11d; }
+    for (i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  })();
+  function gmul(a, b) { return (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]]; }
+  function genPoly(n) {
+    var p = [1];
+    for (var i = 0; i < n; i++) {
+      var q = new Array(p.length + 1).fill(0);
+      for (var j = 0; j < p.length; j++) { q[j] ^= p[j]; q[j + 1] ^= gmul(p[j], EXP[i]); }
+      p = q;
+    }
+    return p;
+  }
+  function rsEncode(data, n) {
+    var g = genPoly(n), res = data.concat(new Array(n).fill(0));
+    for (var i = 0; i < data.length; i++) {
+      var c = res[i];
+      if (c !== 0) for (var j = 0; j < g.length; j++) res[i + j] ^= gmul(g[j], c);
+    }
+    return res.slice(data.length);
+  }
+  function utf8(s) {
+    var out = [];
+    var b = unescape(encodeURIComponent(s));
+    for (var i = 0; i < b.length; i++) out.push(b.charCodeAt(i));
+    return out;
+  }
+  function blocksOf(v, e) {
+    var t = RS[v][ECL[e]], list = [];
+    for (var k = 0; k < t.length; k += 3) for (var i = 0; i < t[k]; i++) list.push({ total: t[k + 1], data: t[k + 2] });
+    return list;
+  }
+  function dataCap(v, e) { return blocksOf(v, e).reduce(function (a, b) { return a + b.data; }, 0); }
+
+  function makeCodewords(bytes, v, e) {
+    var bits = [];
+    function put(val, len) { for (var i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1); }
+    put(4, 4);
+    put(bytes.length, v < 10 ? 8 : 16);
+    bytes.forEach(function (b) { put(b, 8); });
+    var capBits = dataCap(v, e) * 8;
+    for (var i = 0; i < 4 && bits.length < capBits; i++) bits.push(0);
+    while (bits.length % 8) bits.push(0);
+    var data = [];
+    for (i = 0; i < bits.length; i += 8) {
+      var x = 0; for (var j = 0; j < 8; j++) x = (x << 1) | bits[i + j]; data.push(x);
+    }
+    var pads = [0xec, 0x11], pi = 0;
+    while (data.length < capBits / 8) data.push(pads[pi++ % 2]);
+    // 블록 나누기 + 오류 정정
+    var bl = blocksOf(v, e), pos = 0, dBlocks = [], eBlocks = [], maxD = 0, maxE = 0;
+    bl.forEach(function (b) {
+      var d = data.slice(pos, pos + b.data); pos += b.data;
+      var ec = rsEncode(d, b.total - b.data);
+      dBlocks.push(d); eBlocks.push(ec);
+      maxD = Math.max(maxD, d.length); maxE = Math.max(maxE, ec.length);
+    });
+    var out = [];
+    for (i = 0; i < maxD; i++) dBlocks.forEach(function (d) { if (i < d.length) out.push(d[i]); });
+    for (i = 0; i < maxE; i++) eBlocks.forEach(function (ec) { if (i < ec.length) out.push(ec[i]); });
+    return out;
+  }
+
+  function bch(value, poly, shift) {
+    var v = value << shift;
+    var plen = Math.floor(Math.log2(poly));
+    for (var i = Math.floor(Math.log2(v || 1)); i >= plen; i--) if (v & (1 << i)) v ^= poly << (i - plen);
+    return (value << shift) | v;
+  }
+
+  function build(codewords, v, e, mask) {
+    var n = v * 4 + 17, m = [], fn = [];
+    for (var i = 0; i < n; i++) { m.push(new Array(n).fill(false)); fn.push(new Array(n).fill(false)); }
+    function set(r, c, val) { m[r][c] = val; fn[r][c] = true; }
+    function finder(r, c) {
+      for (var dr = -1; dr <= 7; dr++) for (var dc = -1; dc <= 7; dc++) {
+        var rr = r + dr, cc = c + dc;
+        if (rr < 0 || cc < 0 || rr >= n || cc >= n) continue;
+        var on = (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) || (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6)) ||
+          (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4);
+        set(rr, cc, on);
+      }
+    }
+    finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
+    var al = ALIGN[v];                       // 정렬 패턴은 타이밍 패턴보다 먼저
+    al.forEach(function (r) {
+      al.forEach(function (c) {
+        if (fn[r][c]) return;
+        for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++)
+          set(r + dr, c + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1);
+      });
+    });
+    for (i = 8; i < n - 8; i++) {
+      if (!fn[6][i]) set(6, i, i % 2 === 0);
+      if (!fn[i][6]) set(i, 6, i % 2 === 0);
+    }
+    // 형식 정보 자리 예약
+    for (i = 0; i < 9; i++) { if (!fn[8][i]) set(8, i, false); if (!fn[i][8]) set(i, 8, false); }
+    for (i = 0; i < 8; i++) { set(8, n - 1 - i, false); set(n - 1 - i, 8, false); }
+    set(n - 8, 8, true); // 어두운 모듈
+    if (v >= 7) {
+      var vi = bch(v, 0x1f25, 12);
+      for (i = 0; i < 18; i++) {
+        var bit = ((vi >> i) & 1) === 1, a = Math.floor(i / 3), b = i % 3 + n - 11;
+        set(a, b, bit); set(b, a, bit);
+      }
+    }
+    // 데이터 배치
+    var bits = [];
+    codewords.forEach(function (cw) { for (var k = 7; k >= 0; k--) bits.push((cw >> k) & 1); });
+    for (i = 0; i < REMAINDER[v]; i++) bits.push(0);
+    var idx = 0, up = true;
+    for (var col = n - 1; col > 0; col -= 2) {
+      if (col === 6) col = 5;
+      for (var k2 = 0; k2 < n; k2++) {
+        var row = up ? n - 1 - k2 : k2;
+        for (var t = 0; t < 2; t++) {
+          var c = col - t;
+          if (fn[row][c]) continue;
+          var val = idx < bits.length ? bits[idx] === 1 : false; idx++;
+          if (maskFn(mask, row, c)) val = !val;
+          m[row][c] = val;
+        }
+      }
+      up = !up;
+    }
+    // 형식 정보
+    var fmt = bch((ECL_BITS[e] << 3) | mask, 0x537, 10) ^ 0x5412;
+    for (i = 0; i < 15; i++) {
+      var fb = ((fmt >> i) & 1) === 1;
+      if (i < 6) m[i][8] = fb; else if (i < 8) m[i + 1][8] = fb; else m[n - 15 + i][8] = fb;
+      if (i < 8) m[8][n - 1 - i] = fb; else if (i < 9) m[8][15 - i - 1 + 1] = fb; else m[8][15 - i - 1] = fb;
+    }
+    m[n - 8][8] = true;
+    return m;
+  }
+  function maskFn(k, r, c) {
+    switch (k) {
+      case 0: return (r + c) % 2 === 0;
+      case 1: return r % 2 === 0;
+      case 2: return c % 3 === 0;
+      case 3: return (r + c) % 3 === 0;
+      case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+      case 5: return (r * c) % 2 + (r * c) % 3 === 0;
+      case 6: return ((r * c) % 2 + (r * c) % 3) % 2 === 0;
+      default: return ((r + c) % 2 + (r * c) % 3) % 2 === 0;
+    }
+  }
+  function penalty(m) {
+    var n = m.length, p = 0, r, c, i;
+    for (r = 0; r < n; r++) {           // N1 가로·세로 연속
+      var runR = 1, runC = 1;
+      for (c = 1; c < n; c++) {
+        if (m[r][c] === m[r][c - 1]) { runR++; } else { if (runR >= 5) p += runR - 2; runR = 1; }
+        if (m[c][r] === m[c - 1][r]) { runC++; } else { if (runC >= 5) p += runC - 2; runC = 1; }
+      }
+      if (runR >= 5) p += runR - 2;
+      if (runC >= 5) p += runC - 2;
+    }
+    for (r = 0; r < n - 1; r++) for (c = 0; c < n - 1; c++) {   // N2 2x2
+      var v = m[r][c];
+      if (v === m[r][c + 1] && v === m[r + 1][c] && v === m[r + 1][c + 1]) p += 3;
+    }
+    var pat1 = [true, false, true, true, true, false, true, false, false, false, false];
+    var pat2 = [false, false, false, false, true, false, true, true, true, false, true];
+    for (r = 0; r < n; r++) for (c = 0; c <= n - 11; c++) {     // N3 찾기 패턴 유사
+      var h1 = true, h2 = true, v1 = true, v2 = true;
+      for (i = 0; i < 11; i++) {
+        if (m[r][c + i] !== pat1[i]) h1 = false;
+        if (m[r][c + i] !== pat2[i]) h2 = false;
+        if (m[c + i][r] !== pat1[i]) v1 = false;
+        if (m[c + i][r] !== pat2[i]) v2 = false;
+      }
+      p += 40 * ((h1 ? 1 : 0) + (h2 ? 1 : 0) + (v1 ? 1 : 0) + (v2 ? 1 : 0));
+    }
+    var dark = 0;                                                 // N4 어두운 비율
+    for (r = 0; r < n; r++) for (c = 0; c < n; c++) if (m[r][c]) dark++;
+    p += Math.floor(Math.abs(dark * 20 - n * n * 10) / (n * n)) * 10;
+    return p;
+  }
+
+  function encode(text, ecl) {
+    var e = ecl || 'M', bytes = utf8(text), v;
+    for (v = 1; v <= 20; v++) {
+      var over = 4 + (v < 10 ? 8 : 16);
+      if (Math.ceil((over + bytes.length * 8) / 8) <= dataCap(v, e)) break;
+    }
+    if (v > 20) throw new Error('QR코드에 넣기에는 주소가 너무 깁니다.');
+    var cw = makeCodewords(bytes, v, e), best = null, bestP = Infinity;
+    for (var k = 0; k < 8; k++) {
+      var mm = build(cw, v, e, k), pp = penalty(mm);
+      if (pp < bestP) { bestP = pp; best = mm; }
+    }
+    return { version: v, size: best.length, modules: best };
+  }
+
+  /* 캔버스에 그리기 (가운데 로고 선택) */
+  function toCanvas(text, opt) {
+    opt = opt || {};
+    var q = encode(text, opt.logo ? 'H' : (opt.ecl || 'M'));
+    var quiet = 4, cell = opt.cell || 20, size = (q.size + quiet * 2) * cell;
+    var cv = document.createElement('canvas');
+    cv.width = cv.height = size;
+    var g = cv.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, size, size);
+    g.fillStyle = '#000';
+    for (var r = 0; r < q.size; r++) for (var c = 0; c < q.size; c++)
+      if (q.modules[r][c]) g.fillRect((c + quiet) * cell, (r + quiet) * cell, cell, cell);
+    if (opt.logo) {
+      var codeW = q.size * cell, d = Math.round(codeW * (opt.logoRatio || 0.30)), pad = Math.round(d * 0.10);
+      var cx = size / 2, cy = size / 2;
+      g.fillStyle = '#fff';
+      g.beginPath(); g.arc(cx, cy, d / 2 + pad, 0, Math.PI * 2); g.fill();
+      g.drawImage(opt.logo, cx - d / 2, cy - d / 2, d, d);
+    }
+    return cv;
+  }
+  return { encode: encode, toCanvas: toCanvas };
+})();
+
+/* ===== 화면의 A4 쪽을 그대로 그림으로 옮겨 PDF 만들기 ===== */
+var PDFMAKER = (function () {
+  'use strict';
+  var PX_W = 794, PX_H = 1123;   // 210mm x 297mm (96dpi)
+
+  /* 쪽(.nd-page) 하나를 캔버스로 */
+  function pageToCanvas(pageEl, css, scale) {
+    scale = scale || 2.5;
+    var wrap = document.createElement('div');
+    wrap.setAttribute('class', 'nd');
+    wrap.setAttribute('style', 'width:' + PX_W + 'px;height:' + PX_H + 'px;transform:scale(' + scale + ');transform-origin:0 0;background:#fff;margin:0');
+    var st = document.createElement('style');
+    st.textContent = css + '\n.nd-page{margin:0 !important;box-shadow:none !important}';
+    wrap.appendChild(st);
+    wrap.appendChild(pageEl.cloneNode(true));
+    var xhtml = new XMLSerializer().serializeToString(wrap);
+    var W = Math.round(PX_W * scale), H = Math.round(PX_H * scale);
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '">' +
+      '<foreignObject x="0" y="0" width="' + W + '" height="' + H + '">' + xhtml + '</foreignObject></svg>';
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        var cv = document.createElement('canvas');
+        cv.width = W; cv.height = H;
+        var g = cv.getContext('2d');
+        g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+        g.drawImage(img, 0, 0);
+        resolve(cv);
+      };
+      img.onerror = function () { reject(new Error('문서를 그림으로 바꾸지 못했습니다.')); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    });
+  }
+
+  function b64ToBytes(b64) {
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  function bytesToB64(bytes) {
+    var s = '', CH = 0x8000;
+    for (var i = 0; i < bytes.length; i += CH) s += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+    return btoa(s);
+  }
+
+  /* JPEG 쪽들로 PDF 바이트 만들기 (A4) */
+  function jpegsToPdf(list) {
+    var chunks = [], offsets = [], len = 0;
+    function add(x) { var b = typeof x === 'string' ? strBytes(x) : x; chunks.push(b); len += b.length; }
+    function strBytes(s) { var b = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) b[i] = s.charCodeAt(i) & 0xff; return b; }
+    function obj(n, body, stream) {
+      offsets[n] = len;
+      add(n + ' 0 obj\n' + body);
+      if (stream) { add('\nstream\n'); add(stream); add('\nendstream'); }
+      add('\nendobj\n');
+    }
+    var pw = 595.28, ph = 841.89, n = list.length, kids = [];
+    for (var i = 0; i < n; i++) kids.push((3 + i * 3) + ' 0 R');
+    add('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n');
+    obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+    obj(2, '<< /Type /Pages /Kids [' + kids.join(' ') + '] /Count ' + n + ' >>');
+    list.forEach(function (pg, i) {
+      var p = 3 + i * 3, c = p + 1, im = p + 2;
+      var content = 'q ' + pw + ' 0 0 ' + ph + ' 0 0 cm /Im' + i + ' Do Q';
+      obj(p, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pw + ' ' + ph + '] /Resources << /XObject << /Im' + i + ' ' + im + ' 0 R >> >> /Contents ' + c + ' 0 R >>');
+      obj(c, '<< /Length ' + content.length + ' >>', strBytes(content));
+      obj(im, '<< /Type /XObject /Subtype /Image /Width ' + pg.w + ' /Height ' + pg.h +
+        ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + pg.bytes.length + ' >>', pg.bytes);
+    });
+    var total = 3 + n * 3, xref = len;
+    var x = 'xref\n0 ' + total + '\n0000000000 65535 f \n';
+    for (i = 1; i < total; i++) x += ('0000000000' + offsets[i]).slice(-10) + ' 00000 n \n';
+    add(x + 'trailer\n<< /Size ' + total + ' /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF');
+    var out = new Uint8Array(len), pos = 0;
+    chunks.forEach(function (b) { out.set(b, pos); pos += b.length; });
+    return out;
+  }
+
+  /* 쪽 목록 → { bytes, base64 } */
+  function make(pages, css, opt) {
+    opt = opt || {};
+    var scale = opt.scale || 2.5, q = opt.quality || 0.9;
+    return pages.reduce(function (p, pg) {
+      return p.then(function (acc) {
+        return pageToCanvas(pg, css, scale).then(function (cv) {
+          acc.push({ w: cv.width, h: cv.height, bytes: b64ToBytes(cv.toDataURL('image/jpeg', q).split(',')[1]) });
+          return acc;
+        });
+      });
+    }, Promise.resolve([])).then(function (list) {
+      var bytes = jpegsToPdf(list);
+      return { bytes: bytes, base64: bytesToB64(bytes), pages: list.length };
+    });
+  }
+  return { make: make, pageToCanvas: pageToCanvas, bytesToB64: bytesToB64 };
+})();
+
+</script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  var API = /^https:\/\//.test(window.API_URL) ? window.API_URL : '';
+  var LS = { draft: 'nb_draft_v1', key: 'nb_gemini_key', model: 'nb_gemini_model', email: 'nb_email', code: 'nb_code' };
+  var FIELDS = ['title', 'date', 'email', 'greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions', 'rfields', 'rdeadline'];
+  var AUTO = ['greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions'];
+  var S = { id: '', auto: {}, assets: {}, emblemImg: null, published: null, zoom: 0, busy: false };
+
+  var MEM = {}, PERSIST = true;   // 브라우저가 저장을 막으면 이 창이 열려 있는 동안만 기억
+  function store(k, v) {
+    if (v == null) delete MEM[k]; else MEM[k] = String(v);
+    try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { PERSIST = false; }
+  }
+  function load(k) { try { var v = localStorage.getItem(k); if (v != null) return v; } catch (e) { PERSIST = false; } return k in MEM ? MEM[k] : null; }
+  var tt = 0;
+  function toast(msg, kind, ms) {
+    var t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (kind ? ' ' + kind : '');
+    clearTimeout(tt); tt = setTimeout(function () { t.className = 'toast'; }, ms || 3200);
+  }
+  window.toast = toast;
+  function ask(msg, yes) {
+    return new Promise(function (resolve) {
+      $('#askMsg').textContent = msg; $('#askYes').textContent = yes || '확인'; $('#ask').hidden = false; $('#askYes').focus();
+      function done(v) { $('#ask').hidden = true; $('#askYes').onclick = $('#askNo').onclick = null; resolve(v); }
+      $('#askYes').onclick = function () { done(true); }; $('#askNo').onclick = function () { done(false); };
+    });
+  }
+  function type() { var r = $('input[name="ntype"]:checked'); return r ? r.value : 'info'; }
+
+  /* ---------- 서버 ---------- */
+  function api(action, data) {
+    if (!API) return Promise.reject(new Error('서버 주소가 없습니다. 배포된 웹앱 주소(/exec)로 열어 주세요.'));
+    return fetch(API, { method: 'POST', body: JSON.stringify(Object.assign({ action: action }, data || {})) })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var j; try { j = JSON.parse(t); } catch (e) { throw new Error('서버 응답을 읽지 못했습니다. 웹앱 배포 설정(실행: 나, 액세스: 모든 사용자)을 확인해 주세요.'); }
+        if (!j.ok) throw new Error(j.error || '처리하지 못했습니다.');
+        return j;
+      });
+  }
+
+  /* ---------- 탭 ---------- */
+  $$('.tab-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.tab-btn').forEach(function (x) { x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
+      $('#tab-make').hidden = b.dataset.tab !== 'make';
+      $('#tab-key').hidden = b.dataset.tab !== 'key';
+      if (b.dataset.tab === 'make') render();
+    });
+  });
+  function goKeyTab() { $('.tab-btn[data-tab="key"]').click(); window.scrollTo(0, 0); }
+
+  /* ---------- 기본 문장 ---------- */
+  function setAuto(id, val, force) {
+    var el = $('#' + id), cur = el.value;
+    if (force || cur.trim() === '' || cur === S.auto[id]) el.value = val;
+    S.auto[id] = val;
+  }
+  function applyDefaults(force) {
+    var d = ND.defaults(type(), $('#title').value.trim() || '○○', $('#date').value || ND.toISO(new Date()), $('#rdeadline').value);
+    ['greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact'].forEach(function (k) { setAuto(k, d[k], force); });
+    setAuto('rtitle', d.reply.title, force); setAuto('rtext', d.reply.text, force); setAuto('roptions', d.reply.options, force);
+    if (!$('#rdeadline').value) $('#rdeadline').value = d.reply.deadline;
+  }
+  function edited() { return AUTO.filter(function (k) { var v = $('#' + k).value; return v.trim() && v !== S.auto[k]; }); }
+
+  /* ---------- 문서 모으기·미리보기 ---------- */
+  function collect() {
+    var t = type();
+    return {
+      type: t, title: $('#title').value.trim(), date: $('#date').value || ND.toISO(new Date()),
+      greeting: $('#greeting').value, body: $('#body').value, items: $('#items').value, numStyle: $('#numStyle').value,
+      table: $('#table').value, closing: $('#closing').value, contact: $('#contact').value,
+      reply: t === 'reply' ? { title: $('#rtitle').value.trim(), text: $('#rtext').value.trim(), options: $('#roptions').value,
+        fields: $('#rfields').value, phone: $('#rphone').checked, deadline: $('#rdeadline').value } : null
+    };
+  }
+  var rt = 0;
+  function render() {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      if ($('#tab-make').hidden) return;
+      var doc = collect();
+      if (!doc.title) doc.title = '(제목을 입력하세요)';
+      var pages = ND.paginate(doc, S.assets, $('#pvHost'));
+      $('#pvInfo').textContent = '미리보기 · A4 ' + pages.length + '쪽';
+      fitZoom();
+    }, 250);
+  }
+  function fitZoom() {
+    var box = $('#pvScroll'), sc = $('#pvScale'), host = $('#pvHost'), sz = $('#pvSizer');
+    var avail = box.clientWidth - 28, w = 794;
+    if (avail <= 0) return;
+    var z = S.zoom || Math.min(1, avail / w);
+    sc.style.transform = 'scale(' + z + ')';
+    sz.style.width = Math.floor(w * z) + 'px';
+    sz.style.height = Math.ceil(host.scrollHeight * z) + 'px';
+  }
+  $('#zoomIn').addEventListener('click', function () { S.zoom = Math.min(1.6, (S.zoom || currentZoom()) + 0.1); fitZoom(); });
+  $('#zoomOut').addEventListener('click', function () { S.zoom = Math.max(0.3, (S.zoom || currentZoom()) - 0.1); fitZoom(); });
+  $('#zoomFit').addEventListener('click', function () { S.zoom = 0; fitZoom(); });
+  function currentZoom() { var m = /scale\(([\d.]+)\)/.exec($('#pvScale').style.transform); return m ? +m[1] : 1; }
+  window.addEventListener('resize', fitZoom);
+
+  /* ---------- 임시 저장 ---------- */
+  var st = 0;
+  function saveDraft() {
+    clearTimeout(st);
+    st = setTimeout(function () {
+      var o = { id: S.id, type: type(), auto: S.auto, rphone: $('#rphone').checked, published: S.published ? { url: S.published.url } : null };
+      FIELDS.forEach(function (k) { o[k] = $('#' + k).value; });
+      store(LS.draft, JSON.stringify(o));
+    }, 400);
+  }
+  function restoreDraft() {
+    var raw = load(LS.draft); if (!raw) return false;
+    try {
+      var o = JSON.parse(raw);
+      FIELDS.forEach(function (k) { if (o[k] != null) $('#' + k).value = o[k]; });
+      var r = $('input[name="ntype"][value="' + (o.type || 'info') + '"]'); if (r) r.checked = true;
+      $('#rphone').checked = o.rphone !== false;
+      S.auto = o.auto || {}; S.id = o.id || ''; S.published = o.published || null;
+      return !!(o.title || '').trim();
+    } catch (e) { return false; }
+  }
+  function resetAll() {
+    store(LS.draft, null);
+    S.id = ''; S.published = null; S.auto = {};
+    FIELDS.forEach(function (k) { if (k !== 'email') $('#' + k).value = ''; });
+    $('input[name="ntype"][value="info"]').checked = true;
+    $('#rphone').checked = true;
+    $('#date').value = ND.toISO(new Date());
+    $('#result').hidden = true; $('#runSteps').hidden = true; $('#pubStatus').innerHTML = ''; $('#resSheet').hidden = true;
+    $('#restoreBar').hidden = true;
+    onType(); applyDefaults(true); render();
+  }
+  function askNew() {
+    ask('지금 화면의 내용을 지우고 새 가정통신문을 시작할까요?\n(배포한 통신문은 "지난 통신문 불러오기"에서 다시 열 수 있어요.)', '새로 시작').then(function (ok) { if (ok) resetAll(); });
+  }
+  $('#btnNew').addEventListener('click', askNew);
+  $('#btnNew2').addEventListener('click', askNew);
+
+  /* ---------- 입력 이벤트 ---------- */
+  function onType() {
+    var t = type();
+    $('#replyCard').hidden = t !== 'reply';
+    $('#pubNo').textContent = t === 'reply' ? '5' : '4';
+  }
+  $$('input[name="ntype"]').forEach(function (r) {
+    r.addEventListener('change', function () { onType(); applyDefaults(false); render(); saveDraft(); });
+  });
+  var titleTimer = 0;
+  $('#title').addEventListener('input', function () {
+    clearTimeout(titleTimer);
+    titleTimer = setTimeout(function () { applyDefaults(false); render(); }, 500);
+  });
+  $('#date').addEventListener('change', function () { applyDefaults(false); render(); });
+  $('#rdeadline').addEventListener('change', function () { applyDefaults(false); render(); });
+  FIELDS.concat(['rphone']).forEach(function (k) {
+    $('#' + k).addEventListener('input', function () { render(); saveDraft(); });
+    $('#' + k).addEventListener('change', function () { render(); saveDraft(); });
+  });
+  $('#email').addEventListener('change', function () { store(LS.email, $('#email').value.trim()); });
+  $('#code').addEventListener('change', function () { store(LS.code, $('#code').value); });
+  $('#btnDefaults').addEventListener('click', function () {
+    var go = function () { applyDefaults(true); render(); saveDraft(); toast('제목·날짜·계절에 맞춘 기본 문장을 넣었어요.', 'ok'); };
+    if (!edited().length) { go(); return; }
+    ask('직접 고친 문장도 기본 문장으로 바뀝니다. 계속할까요?', '바꾸기').then(function (ok) { if (ok) go(); });
+  });
+
+  /* ---------- AI (Gemini) ---------- */
+  function aiKey() { return (load(LS.key) || '').trim(); }
+  function updateChip() {
+    var c = $('#aiChip');
+    if (aiKey()) { c.className = 'chip on'; c.textContent = 'AI 연결됨'; c.onclick = null; }
+    else { c.className = 'chip off'; c.textContent = 'AI 키 등록하기 ›'; c.onclick = goKeyTab; }
+  }
+  var GL = 'https://generativelanguage.googleapis.com/v1beta/';
+  function pickModel(key, fresh) {
+    var cached = load(LS.model);
+    if (cached && !fresh) return Promise.resolve(cached);
+    return fetch(GL + 'models?pageSize=200&key=' + encodeURIComponent(key)).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw aiError(r.status, j);
+        var names = (j.models || []).filter(function (m) { return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0; })
+          .map(function (m) { return m.name.replace(/^models\//, ''); });
+        var pick = ['gemini-flash-latest', 'gemini-flash-lite-latest'].filter(function (n) { return names.indexOf(n) >= 0; })[0];
+        if (!pick) {
+          var fl = names.filter(function (n) { return /^gemini-\d+(\.\d+)?-flash(-lite)?$/.test(n); }).sort(function (a, b) {
+            var va = parseFloat(a.split('-')[1]), vb = parseFloat(b.split('-')[1]);
+            if (vb !== va) return vb - va;
+            return (/lite/.test(a) ? 1 : 0) - (/lite/.test(b) ? 1 : 0);
+          });
+          pick = fl[0] || names.filter(function (n) { return /flash/.test(n) && !/image|tts|audio|live|embed|vision/.test(n); })[0];
+        }
+        if (!pick) throw new Error('사용할 수 있는 Gemini 모델을 찾지 못했습니다.');
+        store(LS.model, pick);
+        return pick;
+      });
+    });
+  }
+  function aiError(status, j) {
+    var msg = (j && j.error && j.error.message) || '';
+    if (status === 400 && /API key/i.test(msg)) return new Error('AI 키가 올바르지 않아요. "AI 키 등록 방법" 탭에서 다시 확인해 주세요.');
+    if (status === 403) return new Error('이 AI 키로는 사용할 수 없어요. 개인 gmail 계정으로 새 키를 만들어 주세요.');
+    if (status === 429) return new Error('무료 사용 횟수를 잠시 다 썼어요. 1~2분 뒤에 다시 눌러 주세요.');
+    if (status === 404) { store(LS.model, null); return new Error('AI 모델이 바뀌었어요. 한 번 더 눌러 주세요.'); }
+    return new Error('AI 요청이 실패했어요' + (msg ? ': ' + msg : '.'));
+  }
+  function gemini(prompt, key) {
+    return pickModel(key).then(function (model) {
+      return fetch(GL + 'models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.6, responseMimeType: 'application/json',
+            responseSchema: { type: 'OBJECT', properties: { greeting: { type: 'STRING' }, body: { type: 'STRING' }, closing: { type: 'STRING' }, items: { type: 'STRING' } }, required: ['greeting', 'body', 'closing'] }
+          }
+        })
+      }).then(function (r) {
+        return r.json().then(function (j) {
+          if (!r.ok) throw aiError(r.status, j);
+          var parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+          var text = parts.map(function (p) { return p.text || ''; }).join('');
+          var m = /\{[\s\S]*\}/.exec(text);
+          if (!m) throw new Error('AI 답변을 읽지 못했어요. 다시 눌러 주세요.');
+          return JSON.parse(m[0]);
+        });
+      });
+    });
+  }
+  function aiPrompt(doc) {
+    var kind = { info: '안내형(알림)', reply: '회신형(동의서·신청서를 받음)', pay: '납입고지형(납부 안내)' }[doc.type];
+    var d = ND.parseISO(doc.date);
+    var lines = [
+      '너는 인천 세일고등학교 교사의 가정통신문 작성을 돕는다. 학부모에게 보내는 공문 문체(정중한 합쇼체)로 쓴다.',
+      '형태: ' + kind,
+      '제목: ' + doc.title,
+      '발행일: ' + ND.fmtDay(doc.date) + ' (' + (d.getMonth() + 1) + '월, ' + ND.seasonName(doc.date) + ')',
+      '세부 항목(교사가 입력, 번호 없이 줄마다 하나):\n' + (doc.items || '(없음)')
+    ];
+    if (doc.table && doc.table.trim()) lines.push('표 내용:\n' + doc.table);
+    if (doc.type === 'reply' && doc.reply) lines.push('회신서: ' + doc.reply.title + ' / 회신 기한 ' + (doc.reply.deadline ? ND.fmtMD(doc.reply.deadline) : '없음'));
+    lines.push('현재 초안 인사말:\n' + doc.greeting, '현재 초안 안내 문단:\n' + doc.body);
+    lines.push(
+      '작성 규칙:',
+      '- greeting: 2~3줄. 첫 줄은 "학부모님, 안녕하십니까?"(납입고지형은 "학부모님 댁내 평안하심을 기원합니다."). 발행일의 달과 계절, 날씨에 어울리는 안부 한 문장을 넣는다. 줄은 \\n으로 나눈다.',
+      '- body: 제목과 세부 항목에 맞춘 취지 문단 2~4문장. "다음과 같이" 또는 "아래와 같이"로 세부 항목을 안내한다는 흐름. 회신형이면 회신서 작성·제출(기한 포함)을 요청한다. 세부 항목의 날짜·장소를 지어내지 않는다.',
+      '- closing: 한 문장 (예: 학부모님의 많은 관심과 협조를 부탁드립니다.). 납입고지형은 빈 문자열.',
+      '- items: 세부 항목이 비어 있거나 "일시 : " 처럼 값이 빈 틀만 있으면, 제목에 맞는 항목 이름 틀을 줄마다 하나씩 제안(값은 비워 둠). 이미 내용이 있으면 빈 문자열.',
+      '- 과장·이모지·영어 금지. 학교 이름은 "본교"로 쓴다.',
+      'JSON으로만 답한다: {"greeting": "...", "body": "...", "closing": "...", "items": "..."}'
+    );
+    return lines.join('\n');
+  }
+  $('#btnAI').addEventListener('click', function () {
+    var key = aiKey();
+    if (!key) { toast('먼저 AI 키를 등록해 주세요.', 'err'); goKeyTab(); return; }
+    var doc = collect();
+    if (!doc.title) { toast('제목을 먼저 입력해 주세요.', 'err'); $('#title').focus(); return; }
+    var b = $('#btnAI'); b.disabled = true; b.textContent = '✨ AI가 쓰는 중…';
+    gemini(aiPrompt(doc), key).then(function (r) {
+      if (r.greeting) $('#greeting').value = String(r.greeting).trim();
+      if (r.body) $('#body').value = String(r.body).trim();
+      if (r.closing != null) $('#closing').value = String(r.closing).trim();
+      var itemsTemplate = !doc.items.trim() || doc.items === S.auto.items;
+      if (r.items && String(r.items).trim() && itemsTemplate) $('#items').value = String(r.items).trim();
+      render(); saveDraft();
+      toast('AI가 초안을 다듬었어요. 내용을 꼭 확인해 주세요.', 'ok', 4000);
+    }).catch(function (e) { toast(e.message, 'err', 6000); })
+      .then(function () { b.disabled = false; b.textContent = '✨ AI로 초안 다듬기'; });
+  });
+
+  /* 키 등록 탭 */
+  $('#apiKey').value = aiKey();
+  $('#keyShow').addEventListener('click', function () {
+    var i = $('#apiKey'); i.type = i.type === 'password' ? 'text' : 'password'; this.textContent = i.type === 'password' ? '보기' : '숨기기';
+  });
+  function keyStatus(msg, kind) { $('#keyStatus').innerHTML = ''; var d = document.createElement('div'); d.className = 'status ' + kind; d.textContent = msg; $('#keyStatus').appendChild(d); }
+  $('#keySave').addEventListener('click', function () {
+    var k = $('#apiKey').value.trim();
+    if (!/^AIza[0-9A-Za-z_\-]{20,}$/.test(k)) { keyStatus('키 모양이 맞지 않아요. AIza로 시작하는 글자 전체를 복사해 붙여 넣어 주세요.', 'err'); return; }
+    keyStatus('확인하는 중…', 'info');
+    pickModel(k, true).then(function (model) {
+      store(LS.key, k); updateChip();
+      keyStatus('연결되었어요! (' + model + ') 이제 "가정통신문 만들기" 탭에서 ✨ AI로 초안 다듬기를 쓸 수 있어요.' +
+        (PERSIST ? '' : ' (이 브라우저 설정 때문에 키가 저장되지 않아, 창을 닫으면 다시 붙여 넣어야 해요.)'), 'ok');
+    }).catch(function (e) { keyStatus(e.message, 'err'); });
+  });
+  $('#keyDel').addEventListener('click', function () {
+    store(LS.key, null); store(LS.model, null); $('#apiKey').value = ''; updateChip(); keyStatus('이 컴퓨터에서 키를 지웠어요.', 'info');
+  });
+
+  /* ---------- 그림(드라이브) ---------- */
+  function loadAssets() {
+    var P = window.PRELOAD;
+    var got = P && P.assets ? Promise.resolve({ assets: P.assets }) : API ? api('config') : Promise.resolve({ assets: {} });
+    return got.then(function (j) {
+      var a = j.assets || {};
+      return Promise.all([ND.trimImage(a.emblem, 360), ND.trimImage(a.slogan, 700), ND.trimImage(a.incheon, 700)]).then(function (r) {
+        S.assets = { emblem: r[0], slogan: r[1], incheon: r[2] };
+        if (r[0]) { var im = new Image(); im.src = r[0]; S.emblemImg = im; }
+      });
+    }).catch(function (e) { toast('학교 로고를 불러오지 못했어요: ' + e.message, 'err', 6000); });
+  }
+
+  /* ---------- 배포 ---------- */
+  function step(name, cls) { var li = $('#runSteps li[data-step="' + name + '"]'); if (li) li.className = cls || ''; }
+  function pubStatus(msg, kind) { $('#pubStatus').innerHTML = ''; if (!msg) return; var d = document.createElement('div'); d.className = 'status ' + kind; d.textContent = msg; $('#pubStatus').appendChild(d); }
+  /* GitHub Pages에서 열었으면 그 폴더 주소(가정용 화면 index.html이 있는 곳) */
+  function pagesBase() {
+    return location.protocol === 'https:' && /\.github\.io$/.test(location.hostname) ? location.origin + location.pathname.replace(/[^\/]*$/, '') : '';
+  }
+  function fileName(doc, ext) { return (doc.date + '_' + doc.title).replace(/[\\/:*?"<>|]+/g, ' ').trim() + ext; }
+  function validate(doc) {
+    if (!doc.title) return ['#title', '제목을 입력해 주세요.'];
+    if (!doc.date) return ['#date', '발행일을 정해 주세요.'];
+    var em = $('#email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return ['#email', 'PDF와 QR코드를 받을 교사 메일 주소를 정확히 입력해 주세요.'];
+    if (doc.type === 'reply' && !String(doc.reply.options || '').trim()) return ['#roptions', '회신서 선택지를 한 개 이상 적어 주세요.'];
+    if (!$('#code').value.trim()) return ['#code', '교사 확인 번호를 입력해 주세요.'];
+    return null;
+  }
+  function makePdf(doc) {
+    var host = document.createElement('div');
+    host.style.cssText = 'position:absolute;left:-30000px;top:0';
+    document.body.appendChild(host);
+    var pages = ND.paginate(doc, S.assets, host);
+    return PDFMAKER.make(pages, ND_CSS, { scale: 2.5, quality: 0.92 }).then(function (r) { host.remove(); return r; },
+      function (e) { host.remove(); throw e; });
+  }
+  function qrData(url) {
+    var cv = QR.toCanvas(url, { logo: S.emblemImg && S.emblemImg.complete ? S.emblemImg : null, cell: 16 });
+    return cv.toDataURL('image/png');
+  }
+  $('#btnPublish').addEventListener('click', function () {
+    if (S.busy) return;
+    var doc = collect(), bad = validate(doc);
+    if (bad) { toast(bad[1], 'err'); var el = $(bad[0]); el.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(function () { el.focus(); }, 300); return; }
+    if (!API) { toast('배포된 웹앱 주소(/exec)에서 열어야 배포할 수 있어요.', 'err', 6000); return; }
+    S.busy = true; $('#btnPublish').disabled = true;
+    $('#runSteps').hidden = false; ['save', 'pdf', 'qr', 'upload'].forEach(function (s) { step(s, ''); });
+    $('#result').hidden = true; pubStatus('', '');
+    var email = $('#email').value.trim(), code = $('#code').value.trim(), cur = 'save', saved, qr, pdf;
+    store(LS.email, email); store(LS.code, code);
+    step('save', 'doing');
+    api('saveNotice', { code: code, id: S.id, notice: doc, viewerBase: pagesBase() }).then(function (r) {
+      saved = r; S.id = r.id; step('save', 'done');
+      cur = 'pdf'; step('pdf', 'doing');
+      return makePdf(doc);
+    }).then(function (p) {
+      pdf = p; step('pdf', 'done');
+      cur = 'qr'; step('qr', 'doing');
+      qr = qrData(saved.viewerUrl); step('qr', 'done');
+      cur = 'upload'; step('upload', 'doing');
+      return api('publish', { code: code, id: S.id, email: email, pdf: pdf.base64, qr: qr.split(',')[1], pdfName: fileName(doc, '.pdf'), qrName: fileName(doc, '_QR.png') });
+    }).then(function (r) {
+      step('upload', 'done');
+      S.published = { url: saved.viewerUrl };
+      $('#resUrl').value = saved.viewerUrl;
+      $('#resPdf').href = r.pdfUrl || '#'; $('#resOpen').href = saved.viewerUrl;
+      $('#resSheet').hidden = !r.sheetUrl; if (r.sheetUrl) $('#resSheet').href = r.sheetUrl;
+      $('#resMail').textContent = r.emailed ? '✓ ' + email + ' 으로 PDF와 QR코드를 보냈어요. (보낸 주소: ' + r.sentFrom + ')'
+        : '메일은 보내지 못했어요: ' + (r.mailError || '') + ' (PDF는 드라이브에 저장됐어요.)';
+      $('#result').hidden = false;
+      pubStatus('배포가 끝났어요. 메일로 받은 QR코드나 아래 주소를 가정에 보내 주세요. PDF는 학교 홈페이지에 올리면 돼요.', 'ok');
+      render(); saveDraft();
+    }).catch(function (e) {
+      step(cur, 'fail');
+      pubStatus(e.message, 'err');
+    }).then(function () { S.busy = false; $('#btnPublish').disabled = false; });
+  });
+  $('#btnPdf').addEventListener('click', function () {
+    var doc = collect();
+    if (!doc.title) { toast('제목을 먼저 입력해 주세요.', 'err'); return; }
+    var b = this; b.disabled = true; b.textContent = 'PDF 만드는 중…';
+    makePdf(doc).then(function (p) {
+      var blob = new Blob([p.bytes], { type: 'application/pdf' }), a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = fileName(doc, '.pdf');
+      document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+      toast('PDF를 내려받았어요 (' + p.pages + '쪽).', 'ok');
+    }).catch(function (e) { toast(e.message, 'err', 6000); })
+      .then(function () { b.disabled = false; b.textContent = 'PDF 미리 내려받기'; });
+  });
+  $('#btnCopy').addEventListener('click', function () {
+    var i = $('#resUrl'); i.select();
+    (navigator.clipboard ? navigator.clipboard.writeText(i.value) : Promise.reject()).then(function () { toast('주소를 복사했어요.', 'ok'); },
+      function () { document.execCommand('copy'); toast('주소를 복사했어요.', 'ok'); });
+  });
+
+  /* ---------- 지난 통신문 ---------- */
+  function loadNotice(id, url) {
+    api('getNotice', { id: id, noAssets: true }).then(function (j) {
+      var n = j.notice;
+      S.id = id; S.auto = {};
+      var r = $('input[name="ntype"][value="' + n.type + '"]'); if (r) r.checked = true;
+      ['title', 'date', 'greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact'].forEach(function (k) { $('#' + k).value = n[k] || ''; });
+      var rp = n.reply || {};
+      $('#rtitle').value = rp.title || ''; $('#rtext').value = rp.text || ''; $('#roptions').value = rp.options || '';
+      $('#rfields').value = rp.fields || ''; $('#rdeadline').value = rp.deadline || ''; $('#rphone').checked = rp.phone !== false;
+      onType();
+      S.published = { url: url };
+      $('#resUrl').value = url; $('#resOpen').href = url;
+      $('#resPdf').href = '#'; $('#resSheet').hidden = true; $('#runSteps').hidden = true; $('#pubStatus').innerHTML = '';
+      $('#resMail').textContent = '불러온 통신문이에요. 고친 뒤 [완성하고 배포하기]를 누르면 같은 주소·QR코드로 내용이 바뀌어요.';
+      $('#result').hidden = false; $('#restoreBar').hidden = true;
+      render(); saveDraft();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      toast('"' + n.title + '"을(를) 불러왔어요.', 'ok');
+    }).catch(function (e) { toast(e.message, 'err', 6000); });
+  }
+  $('#btnPast').addEventListener('click', function () {
+    var code = $('#code').value.trim();
+    if (!code) { toast('아래 "교사 확인 번호"를 먼저 입력해 주세요.', 'err'); $('#code').scrollIntoView({ block: 'center' }); $('#code').focus(); return; }
+    var b = this; b.disabled = true; b.textContent = '불러오는 중…';
+    api('listNotices', { code: code }).then(function (j) {
+      store(LS.code, code);
+      var ul = $('#pastList'); ul.innerHTML = ''; ul.hidden = false;
+      if (!j.items.length) { var e = document.createElement('li'); e.innerHTML = '<span class="empty">아직 배포한 통신문이 없어요.</span>'; ul.appendChild(e); return; }
+      j.items.forEach(function (it) {
+        var li = document.createElement('li');
+        var t = document.createElement('div'); t.className = 'tt'; t.textContent = it.title;
+        var m = document.createElement('div'); m.className = 'mm';
+        m.textContent = it.date + ' · ' + it.type + (it.count != null ? ' · 회신 ' + it.count + '건' : '');
+        var bs = document.createElement('div'); bs.className = 'btns';
+        var ed = document.createElement('button'); ed.type = 'button'; ed.className = 'btn sm'; ed.textContent = '불러오기';
+        ed.addEventListener('click', function () {
+          ask('"' + it.title + '"을(를) 불러올까요? 지금 화면의 내용은 바뀝니다.', '불러오기').then(function (ok) { if (ok) loadNotice(it.id, it.url); });
+        });
+        bs.appendChild(ed);
+        if (it.sheetUrl) { var a = document.createElement('a'); a.className = 'btn sm'; a.href = it.sheetUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '회신 현황'; bs.appendChild(a); }
+        li.appendChild(t); li.appendChild(bs); li.appendChild(m);
+        ul.appendChild(li);
+      });
+    }).catch(function (e) { toast(e.message, 'err', 6000); })
+      .then(function () { b.disabled = false; b.textContent = '목록 새로 보기'; });
+  });
+
+  /* ---------- 시작 ---------- */
+  $('#email').value = load(LS.email) || '';
+  $('#code').value = load(LS.code) || '';
+  var restored = restoreDraft();
+  if (!$('#date').value) $('#date').value = ND.toISO(new Date());
+  if (restored) {
+    $('#restoreBar').hidden = false;
+    if (S.published) {
+      $('#resUrl').value = S.published.url; $('#resOpen').href = S.published.url;
+      $('#result').hidden = false; $('#resMail').textContent = '이 통신문은 이미 배포했어요. 고친 뒤 다시 배포하면 같은 주소·QR로 내용이 바뀌어요.';
+    }
+  }
+  onType();
+  if (!restored) applyDefaults(true);
+  updateChip();
+  render();
+  loadAssets().then(render);
+})();
+</script>
+</body>
+</html>

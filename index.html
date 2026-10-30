@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세일고등학교 가정통신문</title>
+<style>
+/* ===== 가정통신문 문서 양식 (세일고등학교) ===== */
+.nd{--nd-gray:#808080;--nd-muted:#595959;--nd-hdr:#e7e6e6;--nd-lbl:#f2f2f2;
+  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;
+  color:#111;font-size:11pt;line-height:1.56;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.nd *{box-sizing:border-box}
+:where(.nd) p{margin:0}
+.nd img{display:block;max-width:100%}
+
+/* 종이(A4) 한 쪽 */
+.nd-page{width:210mm;height:297mm;padding:9mm 20mm 8mm;background:#fff;overflow:hidden;position:relative}
+.nd-inner > :first-child{margin-top:0 !important}
+
+/* 머리 부분 */
+.nd-top{display:flex;justify-content:flex-end;min-height:9.3mm}
+.nd-top img{width:55.6mm;height:auto}
+.nd-site{font-size:9pt;line-height:1.3;margin:1mm 0 .8mm}
+.nd-hdr{display:grid;grid-template-columns:20fr 37fr 62fr 51fr;border-top:2.25pt solid var(--nd-gray);
+  border-bottom:2.25pt solid var(--nd-gray);min-height:21mm}
+.nd-hdr > div{display:flex;align-items:center;justify-content:center;padding:0 1.5mm}
+.nd-hdr-emblem img{width:16.9mm;height:auto}
+.nd-hdr-school{flex-direction:column;align-items:flex-start !important;border-right:1pt solid var(--nd-gray);line-height:1.35}
+.nd-hdr-school .m{font-size:9pt}
+.nd-hdr-school .s{font-size:14pt;font-weight:700}
+.nd-hdr-title{background:var(--nd-hdr);border-right:1pt solid var(--nd-gray);white-space:nowrap;font-size:24pt;font-weight:700;line-height:1.2}
+.nd-hdr-slogan img{width:46.6mm;height:auto}
+.nd-title{font-size:16pt;font-weight:700;text-align:center;line-height:1.4;margin:4mm 0 2.5mm;word-break:keep-all}
+
+/* 본문 */
+.nd-p{text-align:justify;word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}
+.nd-p + .nd-p{margin-top:0}
+.nd-gap{height:2.4mm}
+.nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}
+.nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}
+.nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}
+.nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}
+.nd-item.plain{padding-left:3mm}
+.nd-table-wrap{margin:2mm 0 1mm}
+.nd-table{width:100%;border-collapse:collapse;table-layout:auto;font-size:10pt;line-height:1.4}
+.nd-table th,.nd-table td{border:.75pt solid #000;padding:1.2mm 1.5mm;text-align:center;vertical-align:middle;word-break:keep-all}
+.nd-table th{background:var(--nd-lbl);font-weight:700}
+.nd-closing{margin-top:2.4mm}
+.nd-contact{text-align:center;margin-top:3mm;font-size:10.5pt}
+
+/* 날짜·학교장 */
+.nd-sign{position:relative;margin-top:5mm;padding-bottom:1mm}
+.nd-date{font-size:14pt;text-align:center;line-height:1.4}
+.nd-principal{font-size:20pt;font-weight:700;text-align:center;letter-spacing:3pt;line-height:1.45}
+
+/* 절취선·회신서 */
+.nd-slipwrap{margin-top:5mm}
+.nd-cut{display:flex;align-items:center;gap:2.5mm;font-size:9pt;color:var(--nd-muted);letter-spacing:2pt;line-height:1.3;margin:0 0 3.5mm}
+.nd-cut::before,.nd-cut::after{content:"";flex:1;border-top:1px dashed #7a7a7a}
+.nd-slip-title{font-size:15pt;font-weight:700;text-align:center;line-height:1.4;margin:0 0 2mm;word-break:keep-all}
+.nd-slip-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.nd-slip-table th,.nd-slip-table td{border:.75pt solid #000;height:9mm;padding:0 1.5mm;vertical-align:middle;text-align:center}
+.nd-slip-table th{background:var(--nd-lbl);font-size:10.5pt;font-weight:700;line-height:1.3;word-break:keep-all}
+.nd-slip-table th small{display:block;font-size:8.5pt;font-weight:400}
+.nd-slip-table td.tall{height:13mm}
+.nd-slip-table td.ex{text-align:left;white-space:pre-wrap;font-size:10pt;line-height:1.4;padding:1mm 2mm}
+.nd-slip-table .cls{white-space:nowrap;letter-spacing:.5pt}
+.nd-slip-text{margin-top:2.4mm;text-align:justify;word-break:keep-all;white-space:pre-wrap}
+.nd-options{display:flex;justify-content:center;flex-wrap:wrap;gap:2mm 9mm;font-size:12pt;margin:1.5mm 0}
+.nd-opt{display:inline-flex;align-items:center;gap:1.6mm}
+.nd-box{display:inline-flex;align-items:center;justify-content:center;width:.95em;height:.95em;border:1.2px solid #222;line-height:1}
+.nd-slip-date{text-align:right;margin-top:2mm;white-space:pre}
+.nd-sline{display:flex;justify-content:flex-end;align-items:center;min-height:8mm}
+.nd-sline .lb{white-space:nowrap}
+.nd-sline .nm{display:inline-block;width:32mm;padding-left:4mm;white-space:nowrap;overflow:hidden}
+.nd-sline .mk{position:relative;white-space:nowrap}
+.nd-sline .sig{position:absolute;right:-3mm;top:50%;transform:translateY(-50%);width:24mm;height:9mm;max-width:none;object-fit:contain}
+.nd-slip-note{font-size:9.5pt;color:#333;margin-top:1.5mm}
+
+/* ===== 화면에서 흐르는 형태(가정용) ===== */
+.nd-flow{background:#fff}
+.nd-flow .nd-sheet{container-type:inline-size}
+.nd-flow .nd-top img{width:32.7cqw}
+.nd-flow .nd-hdr{min-height:12.35cqw}
+.nd-flow .nd-hdr > div{padding:0 .88cqw}
+.nd-flow .nd-hdr-emblem img{width:9.95cqw}
+.nd-flow .nd-hdr-school .m{font-size:1.87cqw}
+.nd-flow .nd-hdr-school .s{font-size:2.9cqw}
+.nd-flow .nd-hdr-title{font-size:4.98cqw}
+.nd-flow .nd-hdr-slogan img{width:27.4cqw}
+
+:root{--bg:#e9edf2;--line:#d5dbe3;--ink:#1d2430;--sub:#5b6573;--accent:#1d4f91;--soft:#eaf1fb;--ok:#1b6e34;--okbg:#e7f4ea;--err:#c62828;--errbg:#fdecec;--warn:#8a5a00;--warnbg:#fff4dc}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Malgun Gothic','맑은 고딕','Nanum Gothic','나눔고딕','Apple SD Gothic Neo','Noto Sans KR',sans-serif;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+.bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.bar .t{font-weight:700;font-size:15px;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{-webkit-appearance:none;appearance:none;border:1px solid #c3cad3;background:#fff;border-radius:10px;padding:9px 14px;font-weight:700;font-size:15px;cursor:pointer;white-space:nowrap;line-height:1.2}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.55}
+.btn.big{display:block;width:100%;padding:15px;font-size:17px;border-radius:12px}
+.wrap{max-width:840px;margin:14px auto 40px;padding:0 10px}
+.banner{border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:15px;line-height:1.55}
+.banner.ok{background:var(--okbg);color:var(--ok)}
+.banner.warn{background:var(--warnbg);color:var(--warn)}
+.banner.err{background:var(--errbg);color:var(--err)}
+.sheet-card{background:#fff;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.12);padding:clamp(16px,6vw,64px) clamp(16px,7vw,76px) clamp(20px,6vw,56px)}
+.loading{text-align:center;color:var(--sub);padding:60px 0;font-size:16px}
+.submit-area{margin-top:22px}
+.submit-area .help{font-size:14px;color:var(--sub);margin:8px 0 0;text-align:center}
+.done{margin-top:14px;border-radius:12px;padding:14px;background:var(--okbg);color:var(--ok);font-size:16px;line-height:1.6;text-align:center}
+.done b{font-size:18px}
+.fab{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:25;box-shadow:0 6px 18px rgba(29,79,145,.35);border-radius:999px;padding:13px 22px;font-size:16px}
+.fab[hidden]{display:none}
+
+/* ---- 회신서 입력칸 ---- */
+.nd-flow .nd-slip-table td{padding:1mm 1.5mm}
+.nd-flow .nd-slip-table input,.nd-flow .nd-slip-table select,.nd-flow .nd-slip-table textarea{
+  width:100%;font-size:16px;border:0;border-bottom:1.5px solid #9aa5b4;background:#f7f9fc;border-radius:5px 5px 0 0;padding:6px 6px;min-height:36px}
+.nd-flow .nd-slip-table textarea{resize:vertical;min-height:52px;line-height:1.45;border:1.5px solid #c3cad3;border-radius:6px}
+.nd-flow .nd-slip-table input:focus,.nd-flow .nd-slip-table select:focus,.nd-flow .nd-slip-table textarea:focus{outline:2px solid #2f6fc0;outline-offset:0;background:#fff}
+.nd-flow .nd-slip-table .cls{display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;letter-spacing:0}
+.nd-flow .nd-slip-table .cls select{width:3.3em;padding:6px 2px;text-align:center}
+.nd-flow .nd-slip-table .cls input{width:2.6em;text-align:center;padding:6px 2px}
+.nd-flow .bad{outline:2.5px solid var(--err) !important;background:var(--errbg) !important}
+.nd-flow .nd-options{gap:10px 12px;margin:3mm 0}
+.nd-flow .nd-opt{position:relative;border:1.5px solid #c3cad3;border-radius:12px;padding:10px 16px;cursor:pointer;background:#fff;font-size:16px}
+.nd-flow .nd-opt input{position:absolute;opacity:0;width:1px;height:1px}
+.nd-flow .nd-opt:has(input:checked){border-color:var(--accent);background:var(--soft);font-weight:700}
+.nd-flow .nd-opt:has(input:focus-visible){outline:2px solid #2f6fc0;outline-offset:2px}
+.nd-flow .nd-opt input:checked + .nd-box::after{content:"✓";font-weight:700;color:var(--accent)}
+.nd-flow .nd-options.bad{outline-offset:4px;border-radius:12px}
+.nd-flow .nd-sline{min-height:15mm;padding-right:6mm}
+.nd-flow .nd-sline .nm{min-width:24mm;width:auto;max-width:40mm;margin-right:9mm}
+.nd-flow .sig-slot{position:absolute;right:-6mm;top:50%;transform:translateY(-50%);width:32mm;height:13mm;padding:0;border:2px dashed var(--accent);border-radius:8px;
+  background:rgba(234,241,251,.92);color:var(--accent);font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nd-flow .sig-slot img{display:none;max-width:100%;max-height:100%;object-fit:contain}
+.nd-flow .sig-slot.signed{background:transparent;border:1px dashed transparent}
+.nd-flow .sig-slot.signed img{display:block}
+.nd-flow .sig-slot.signed .ph{display:none}
+.nd-flow .sig-slot.signed:hover,.nd-flow .sig-slot.signed:focus-visible{border-color:#9aa5b4}
+
+@media (max-width:560px){
+  .nd-flow .nd-principal{font-size:17pt;letter-spacing:1.5pt}
+  .nd-flow .nd-p,.nd-flow .nd-slip-text{text-align:left}
+  .nd-flow .nd-slip-table{display:block;border-top:.75pt solid #000;border-left:.75pt solid #000}
+  .nd-flow .nd-slip-table colgroup{display:none}
+  .nd-flow .nd-slip-table tbody{display:block}
+  .nd-flow .nd-slip-table tr{display:grid;grid-template-columns:6.4em 1fr}
+  .nd-flow .nd-slip-table th,.nd-flow .nd-slip-table td{display:flex;align-items:center;height:auto;min-height:12mm;border:0;
+    border-right:.75pt solid #000;border-bottom:.75pt solid #000}
+  .nd-flow .nd-slip-table th{justify-content:center;flex-direction:column;text-align:center}
+  .nd-flow .nd-slip-table .cls{justify-content:flex-start}
+  .nd-flow .nd-opt{flex:1 1 100%;justify-content:flex-start}
+}
+
+/* ---- 서명 창 ---- */
+body.sp-open{overflow:hidden}
+.sp-modal{position:fixed;inset:0;z-index:80;background:rgba(15,20,30,.55);display:flex;align-items:center;justify-content:center;padding:12px}
+.sp-modal[hidden]{display:none}
+.sp-box{background:#fff;border-radius:16px;width:min(620px,100%);padding:14px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.sp-head{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
+.sp-head strong{font-size:19px}
+.sp-head span{font-size:14px;color:var(--sub)}
+.sp-pad{position:relative;width:100%;aspect-ratio:2/1;max-height:calc(100vh - 150px);border:1.5px solid #c3cad3;border-radius:12px;background:#fff;overflow:hidden;touch-action:none}
+.sp-base{position:absolute;left:8%;right:8%;bottom:24%;border-bottom:1.5px dashed #c3cad3}
+.sp-wm{position:absolute;left:8%;bottom:26%;color:#b8c0cb;font-size:14px}
+#sp-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.sp-act{display:flex;gap:8px;margin-top:12px}
+.sp-grow{margin-right:auto}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:90;width:max-content;max-width:calc(100vw - 32px);background:#222b36;color:#fff;
+  padding:12px 16px;border-radius:10px;font-size:15px;line-height:1.45;box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+.toast.err{background:var(--err)}
+.toast.ok{background:var(--ok)}
+
+#printHost{display:none}
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  body > *{display:none !important}
+  body > #printHost{display:block !important}
+  #printHost .nd-page{margin:0;box-shadow:none;break-after:page;page-break-after:always}
+  #printHost .nd-page:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="bar"><span class="t" id="barTitle">세일고등학교 가정통신문</span><button type="button" class="btn" id="btnPrint" hidden>인쇄</button></div>
+<div class="wrap">
+  <div id="banner"></div>
+  <div class="sheet-card" id="card"><div class="loading" id="loading">가정통신문을 불러오는 중…</div><div id="docHost"></div>
+    <div class="submit-area" id="submitArea" hidden>
+      <button type="button" class="btn primary big" id="btnSubmit">회신서 제출하기</button>
+      <p class="help">제출한 뒤에도 고칠 내용이 있으면 다시 제출하면 최신 내용으로 바뀌어요.</p>
+      <div id="doneBox"></div>
+    </div>
+  </div>
+</div>
+<button type="button" class="btn primary fab" id="fab" hidden>회신서 작성하기 ↓</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="printHost"></div>
+
+<script>window.API_URL = 'https://script.google.com/macros/s/AKfycby6hyj7GkVLLW0-CaPQ-SnRbKkd-k3l9xRBzleEwrfwTGJgpQ5bjHcAqlaud_2Q17Pa/exec'; window.PRELOAD = '__PRELOAD__'; if (typeof window.PRELOAD === 'string') window.PRELOAD = null;</script>
+<script>
+/* ===== 가정통신문 공통: 기본 문장, 문서 만들기, A4 쪽 나누기 ===== */
+var ND = (function () {
+  'use strict';
+  var SCHOOL = {
+    site: 'https://seilhs.icehs.kr',
+    name: '세일고등학교',
+    motto: '꿈이 이루어지는 학교',
+    principal: '세 일 고 등 학 교 장',
+    adminPhone: '032)515-0971'
+  };
+  var DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+  var GANADA = '가나다라마바사아자차카타파하';
+
+  /* ---------- 작은 도구 ---------- */
+  function h(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v == null || v === false) return;
+      if (k === 'class') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k === 'style') e.setAttribute('style', v);
+      else e.setAttribute(k, v === true ? '' : v);
+    });
+    (kids || []).forEach(function (c) { if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function toISO(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+  function parseISO(s) {
+    var m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(s || ''));
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date();
+  }
+  function addDays(iso, n) { var d = parseISO(iso); d.setDate(d.getDate() + n); return toISO(d); }
+  function fmtDate(iso) { var d = parseISO(iso); return d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + '.'; }
+  function fmtDay(iso) { var d = parseISO(iso); return fmtDate(iso) + '(' + DAYS[d.getDay()] + ')'; }
+  function fmtMD(iso) { var d = parseISO(iso); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일(' + DAYS[d.getDay()] + ')'; }
+
+  /* 받침 유무에 따라 조사 고르기: josa('활동', '을/를') */
+  function hasJong(word) {
+    var s = String(word || '').replace(/[\s)\]」』"'.]+$/, '');
+    if (!s) return false;
+    var c = s.charCodeAt(s.length - 1);
+    if (c >= 0xac00 && c <= 0xd7a3) return (c - 0xac00) % 28 !== 0;
+    return /[013678lmnLMN]$/.test(s);
+  }
+  function rieul(word) {
+    var s = String(word || '').trim(), c = s.charCodeAt(s.length - 1);
+    return c >= 0xac00 && c <= 0xd7a3 && (c - 0xac00) % 28 === 8;
+  }
+  function josa(word, pair) {
+    var p = pair.split('/');
+    if (pair === '으로/로') return word + (hasJong(word) && !rieul(word) ? '으로' : '로');
+    return word + (hasJong(word) ? p[0] : p[1]);
+  }
+
+  /* 제목에서 핵심어 뽑기: "2026학년도 천체관측 활동 안내" → "천체관측 활동" */
+  function subjectOf(title, type) {
+    var s = String(title || '').trim();
+    s = s.replace(/^\s*\d{4}\s*학년도\s*/, '');
+    s = s.replace(/\s*(실시\s*)?(안내문?|알림|공지|안내\s*및\s*회신)\s*$/, '');
+    if (type === 'pay') s = s.replace(/\s*(납입\s*)?고지\s*$/, '').replace(/\s*납입\s*$/, '');
+    s = s.trim();
+    return s || String(title || '').trim() || '행사';
+  }
+
+  function seasonLine(iso) {
+    var m = parseISO(iso).getMonth() + 1;
+    return {
+      1: '새해를 맞아 가정에 건강과 행복이 가득하시길 기원합니다.',
+      2: '한 학년을 마무리하는 2월, 가정에 평안이 가득하시길 기원합니다.',
+      3: '새 학년을 맞아 희망찬 출발을 하는 3월, 가정에 건강과 행복이 가득하시길 기원합니다.',
+      4: '따스한 봄기운이 가득한 4월, 가정에 평안과 행복이 함께하시길 기원합니다.',
+      5: '신록이 푸르른 5월, 가정에 사랑과 행복이 가득하시길 기원합니다.',
+      6: '초여름의 싱그러움이 느껴지는 6월, 가정에 건강과 평안이 함께하시길 기원합니다.',
+      7: '본격적인 무더위가 시작되는 7월, 가정에 건강과 평안이 함께하시길 기원합니다.',
+      8: '여름의 끝자락에서 가정에 건강과 평안이 함께하시길 기원합니다.',
+      9: '선선한 바람이 부는 9월, 가정에 평안과 행복이 가득하시길 기원합니다.',
+      10: '결실의 계절 10월, 가정에 풍성함과 행복이 가득하시길 기원합니다.',
+      11: '쌀쌀한 바람이 부는 11월, 환절기 건강에 유의하시고 가정에 평안이 함께하시길 기원합니다.',
+      12: '한 해를 마무리하는 12월, 가정에 따뜻함과 행복이 가득하시길 기원합니다.'
+    }[m];
+  }
+  function seasonName(iso) {
+    var m = parseISO(iso).getMonth() + 1;
+    return m <= 2 || m === 12 ? '겨울' : m <= 5 ? '봄' : m <= 8 ? '여름' : '가을';
+  }
+
+  /* ---------- 형태별 기본 문장 ---------- */
+  function defaults(type, title, iso, deadlineISO) {
+    var subj = subjectOf(title, type);
+    var d = {};
+    var deadline = deadlineISO || addDays(iso, 5);
+    if (type === 'pay') {
+      d.greeting = '학부모님 댁내 평안하심을 기원합니다.';
+      d.body = '아뢰올 말씀은 ' + josa(subj, '을/를') + ' 아래와 같이 납입고지 하오니 기일 내 CMS통장에 입금 또는 신용카드 결제계좌로 입금하여 주시기 바랍니다.';
+      d.items = '납입기한 : ' + fmtMD(addDays(iso, 7)) + ' ~ ' + fmtMD(addDays(iso, 10)) + '까지\n' +
+        '납입금액 : 아래 표와 같음\n' +
+        '납입방법 : 신용카드 또는 개별 CMS 통장에서 인출일에 자동인출\n' +
+        '영수증이 필요하신 분은 본교 행정실이나 학교 홈페이지에서 발급받으실 수 있습니다.';
+      d.numStyle = 'ga';
+      d.table = '학년\t금액\t기간\t비고\n1학년\t\t\t\n2학년\t\t\t\n3학년\t\t\t';
+      d.closing = '';
+      d.contact = '문의전화 : ' + SCHOOL.adminPhone + '(행정실)';
+    } else {
+      d.greeting = '학부모님, 안녕하십니까?\n' + seasonLine(iso) + '\n항상 본교 교육에 깊은 관심과 성원을 보내주셔서 감사드립니다.';
+      if (type === 'reply') {
+        d.body = '본교에서는 ' + josa(subj, '을/를') + ' 다음과 같이 실시하고자 합니다. 내용을 확인하신 후 아래 회신서를 작성하여 ' +
+          fmtMD(deadline) + '까지 제출해 주시기 바랍니다.';
+      } else {
+        d.body = josa(subj, '과/와') + ' 관련하여 다음과 같이 안내해 드립니다. 가정에서도 내용을 확인하시어 자녀가 잘 준비할 수 있도록 지도해 주시기 바랍니다.';
+      }
+      d.items = '일시 : ' + fmtDay(addDays(iso, 7)) + '\n장소 : \n대상 : \n내용 : ';
+      d.numStyle = '1';
+      d.table = '';
+      d.closing = '학부모님의 많은 관심과 협조를 부탁드립니다.';
+      d.contact = '';
+    }
+    var r = { phone: true, fields: '', deadline: deadline, note: '' };
+    if (/신청/.test(subj)) {
+      r.title = subj.replace(/\s*신청$/, '') + ' 신청서';
+      r.text = '본인은 자녀의 ' + subj.replace(/\s*신청$/, '') + ' 신청 여부를 아래와 같이 회신합니다.';
+      r.options = '신청합니다.\n신청하지 않습니다.';
+    } else if (/희망|조사/.test(subj)) {
+      r.title = subj + '서';
+      r.text = '본인은 자녀의 ' + subj + '에 대하여 아래와 같이 회신합니다.';
+      r.options = '희망합니다.\n희망하지 않습니다.';
+    } else {
+      r.title = subj + ' 참가 동의서';
+      r.text = '본인은 자녀가 ' + subj + '에 참가하는 것에 대하여';
+      r.options = '동의합니다.\n동의하지 않습니다.';
+    }
+    d.reply = r;
+    return d;
+  }
+
+  /* ---------- 세부 항목 (줄마다 하나, 들여쓰기 = 하위 항목) ---------- */
+  function parseItems(text, style) {
+    var out = [], top = 0, sub = 0;
+    String(text || '').split(/\r?\n/).forEach(function (raw) {
+      if (!raw.trim()) return;
+      var indent = /^(\s{2,}|\t|\s*[-·•ㆍ]\s)/.test(raw);
+      var line = raw.trim().replace(/^[-·•ㆍ]\s*/, '');
+      if (/^[※*]/.test(line)) { out.push({ level: 'note', label: '※', text: line.replace(/^[※*]\s*/, '') }); return; }
+      if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: indent ? 'l2' : 'plain', label: '', text: line }); return; }
+      line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|[①-⑳])\s*/, '');
+      if (indent && top > 0) {
+        sub++;
+        out.push({ level: 'l2', label: style === 'ga' ? sub + ')' : GANADA.charAt((sub - 1) % 14) + '.', text: line });
+      } else {
+        top++; sub = 0;
+        out.push({ level: 'l1', label: style === 'ga' ? GANADA.charAt((top - 1) % 14) + '.' : top + '.', text: line });
+      }
+    });
+    return out;
+  }
+  /* 표: 엑셀·한글에서 복사(탭) 또는 | 로 구분 */
+  function parseTable(text) {
+    var lines = String(text || '').split(/\r?\n/).filter(function (l) { return l.trim(); });
+    if (!lines.length) return null;
+    var useTab = lines.some(function (l) { return l.indexOf('\t') >= 0; });
+    var rows = lines.map(function (l) {
+      var cells = useTab ? l.split('\t') : l.split('|');
+      if (!useTab) { if (cells[0].trim() === '') cells.shift(); if (cells.length && cells[cells.length - 1].trim() === '') cells.pop(); }
+      return cells.map(function (c) { return c.trim(); });
+    });
+    var n = Math.max.apply(null, rows.map(function (r) { return r.length; }));
+    rows.forEach(function (r) { while (r.length < n) r.push(''); });
+    return rows;
+  }
+  function paragraphs(text) {
+    var out = [];
+    String(text || '').split(/\r?\n/).forEach(function (l) { if (l.trim()) out.push(l.trim()); });
+    return out;
+  }
+
+  /* ---------- 문서 요소 ---------- */
+  function header(assets) {
+    var a = assets || {};
+    return [
+      h('div', { class: 'nd-top' }, [a.incheon ? h('img', { src: a.incheon, alt: '학생성공시대를 여는 인천교육' }) : null]),
+      h('div', { class: 'nd-site', text: SCHOOL.site }),
+      h('div', { class: 'nd-hdr' }, [
+        h('div', { class: 'nd-hdr-emblem' }, [a.emblem ? h('img', { src: a.emblem, alt: '세일고등학교 교표' }) : null]),
+        h('div', { class: 'nd-hdr-school' }, [h('div', { class: 'm', text: SCHOOL.motto }), h('div', { class: 's', text: SCHOOL.name })]),
+        h('div', { class: 'nd-hdr-title', text: '가 정 통 신 문' }),
+        h('div', { class: 'nd-hdr-slogan' }, [a.slogan ? h('img', { src: a.slogan, alt: '세일路, 미래路, 꿈꾸는 大路' }) : null])
+      ])
+    ];
+  }
+  function tableBlock(rows) {
+    var thead = h('thead', null, [h('tr', null, rows[0].map(function (c) { return h('th', { text: c }); }))]);
+    var tbody = h('tbody', null, rows.slice(1).map(function (r) {
+      return h('tr', null, r.map(function (c) { return h('td', { text: c }); }));
+    }));
+    return h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [thead, tbody])]);
+  }
+  function signBlock(doc) {
+    return h('div', { class: 'nd-sign' }, [h('p', { class: 'nd-date', text: fmtDate(doc.date) }), h('p', { class: 'nd-principal', text: SCHOOL.principal })]);
+  }
+  function slipBlock(doc, opts) {
+    var r = doc.reply || {}, ia = opts.interactive, fv = opts.filled || null;
+    var options = String(r.options || '').split(/\r?\n|,/).map(function (s) { return s.trim(); }).filter(Boolean);
+    var fields = String(r.fields || '').split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+    function inp(attrs) { return ia ? h('input', attrs) : null; }
+    function val(k) { return fv && fv[k] ? String(fv[k]) : ''; }
+    var clsCell;
+    if (ia) {
+      clsCell = h('td', { class: 'cls' }, [
+        h('select', { id: 'f-grade', 'aria-label': '학년' }, ['', '1', '2', '3'].map(function (g) { return h('option', { value: g, text: g || '-' }); })), h('span', { text: '학년' }),
+        h('input', { id: 'f-class', inputmode: 'numeric', maxlength: '2', autocomplete: 'off', 'aria-label': '반' }), h('span', { text: '반' }),
+        h('input', { id: 'f-num', inputmode: 'numeric', maxlength: '2', autocomplete: 'off', 'aria-label': '번호' }), h('span', { text: '번' })
+      ]);
+    } else if (fv && fv.grade) {
+      clsCell = h('td', { class: 'cls', text: fv.grade + '학년 ' + fv.cls + '반 ' + fv.num + '번' });
+    } else {
+      clsCell = h('td', { class: 'cls', text: '    학년     반     번' });
+    }
+    var rows = [
+      h('tr', null, [h('th', { text: '학년·반·번호' }), clsCell, h('th', { text: '학생 이름' }),
+        h('td', { text: ia ? null : val('sname') }, [inp({ id: 'f-sname', maxlength: '20', autocomplete: 'off', 'aria-label': '학생 이름' })])])
+    ];
+    if (r.phone) {
+      rows.push(h('tr', null, [h('th', { text: '보호자 이름' }), h('td', { text: ia ? null : val('pname') }, [inp({ id: 'f-pname', maxlength: '20', autocomplete: 'off', 'aria-label': '보호자 이름' })]),
+        h('th', { text: '보호자 연락처' }), h('td', { text: ia ? null : val('phone') }, [inp({ id: 'f-phone', type: 'tel', inputmode: 'tel', maxlength: '13', placeholder: '010-0000-0000', autocomplete: 'off', 'aria-label': '보호자 연락처' })])]));
+    } else {
+      rows.push(h('tr', null, [h('th', { text: '보호자 이름' }), h('td', { colspan: '3', text: ia ? null : val('pname') }, [inp({ id: 'f-pname', maxlength: '20', autocomplete: 'off', 'aria-label': '보호자 이름' })])]));
+    }
+    fields.forEach(function (f, i) {
+      var mm = /^(.*?)\s*(\(.*\))\s*$/.exec(f);
+      var th = mm ? h('th', null, [mm[1], h('small', { text: mm[2] })]) : h('th', { text: f });
+      var ex = fv && fv.extras ? String(fv.extras[i] || '') : '';
+      rows.push(h('tr', null, [th, h('td', { colspan: '3', class: 'tall' + (ex ? ' ex' : ''), text: ia ? null : ex },
+        [ia ? h('textarea', { id: 'f-extra-' + i, 'data-label': f, maxlength: '300', rows: '2', 'aria-label': f }) : null])]));
+    });
+    var table = h('table', { class: 'nd-slip-table' }, [
+      h('colgroup', null, [h('col', { style: 'width:21%' }), h('col', { style: 'width:29%' }), h('col', { style: 'width:20%' }), h('col', { style: 'width:30%' })]),
+      h('tbody', null, rows)
+    ]);
+    var opts2 = h('div', { class: 'nd-options', id: ia ? 'f-options' : null, role: ia ? 'radiogroup' : null, 'aria-label': ia ? '선택' : null },
+      options.map(function (o) {
+        return ia ? h('label', { class: 'nd-opt' }, [h('input', { type: 'radio', name: 'f-choice', value: o }), h('span', { class: 'nd-box' }), h('span', { text: o })])
+          : h('span', { class: 'nd-opt' }, [h('span', { class: 'nd-box', text: fv && fv.choice === o ? '✓' : '' }), o]);
+      }));
+    function sline(who, label) {
+      var sig = fv && fv.sig ? fv.sig[who] : '';
+      var name = !ia && fv ? val(who === 'student' ? 'sname' : 'pname') : '';
+      return h('div', { class: 'nd-sline' }, [
+        h('span', { class: 'lb', text: label + ' :' }), h('span', { class: 'nm', id: ia ? 'm-' + who : null, text: name || null }),
+        h('span', { class: 'mk' }, ['(서명)',
+          ia ? h('button', { type: 'button', class: 'sig-slot', 'data-who': who, 'aria-label': label + ' 서명하기' },
+            [h('img', { alt: '' }), h('span', { class: 'ph', text: '눌러서 서명' })])
+            : (sig ? h('img', { class: 'sig', src: sig, alt: label + ' 서명' }) : null)])
+      ]);
+    }
+    var dateText = ia ? fmtDate(toISO(new Date())) : fv && fv.date ? fmtDate(fv.date) : parseISO(doc.date).getFullYear() + '.      .      .';
+    var kids = [
+      h('div', { class: 'nd-cut', 'aria-hidden': 'true', text: '절 취 선' }),
+      h('p', { class: 'nd-slip-title', text: r.title || '회신서' }),
+      table,
+      r.text ? h('p', { class: 'nd-slip-text', text: r.text }) : null,
+      options.length ? opts2 : null,
+      h('p', { class: 'nd-slip-date', id: ia ? 'f-date' : null, text: dateText }),
+      sline('student', '학생'), sline('parent', '보호자'),
+      r.deadline ? h('p', { class: 'nd-slip-note', text: '※ 회신 기한: ' + fmtDay(r.deadline) + '까지' }) : null
+    ];
+    return h('div', { class: 'nd-slipwrap', id: ia ? 'slip' : null }, kids);
+  }
+
+  /* 본문 블록 목록 (쪽 나누기 단위) */
+  function blocks(doc, opts) {
+    var out = [];
+    paragraphs(doc.greeting).forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
+    var body = paragraphs(doc.body);
+    if (body.length) {
+      if (out.length) out.push(h('div', { class: 'nd-gap' }));
+      body.forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
+    }
+    var items = parseItems(doc.items, doc.numStyle);
+    if (items.length) {
+      out.push(h('div', { class: 'nd-gap' }));
+      items.forEach(function (it) {
+        out.push(h('div', { class: 'nd-item ' + it.level, text: (it.label ? it.label + ' ' : '') + it.text }));
+      });
+    }
+    var rows = parseTable(doc.table);
+    if (rows) out.push(tableBlock(rows));
+    paragraphs(doc.closing).forEach(function (t, i) { out.push(h('p', { class: 'nd-p' + (i === 0 ? ' nd-closing' : ''), text: t })); });
+    if (String(doc.contact || '').trim()) out.push(h('p', { class: 'nd-contact', text: doc.contact.trim() }));
+    out.push(signBlock(doc));
+    if (doc.type === 'reply') out.push(slipBlock(doc, opts));
+    return out;
+  }
+
+  /* ---------- 흐르는 문서(가정용 화면) ---------- */
+  function renderFlow(doc, assets, host, opts) {
+    opts = opts || {};
+    host.innerHTML = '';
+    var sheet = h('div', { class: 'nd-sheet' }, header(assets).concat([h('h1', { class: 'nd-title', text: doc.title })], blocks(doc, opts)));
+    var root = h('div', { class: 'nd nd-flow' }, [sheet]);
+    host.appendChild(root);
+    return root;
+  }
+
+  /* ---------- A4 쪽 나누기(미리보기·PDF) ---------- */
+  function paginate(doc, assets, host, opts) {
+    opts = opts || {};
+    var stage = h('div', { class: 'nd', style: 'position:absolute;left:-30000px;top:0;width:210mm' });
+    document.body.appendChild(stage);
+    var pages = [], page, inner;
+    function newPage(first) {
+      page = h('div', { class: 'nd-page' });
+      if (first) {
+        header(assets).forEach(function (e) { page.appendChild(e); });
+        page.appendChild(h('h1', { class: 'nd-title', text: doc.title }));
+      } else {
+        page.appendChild(h('div', { class: 'nd-top' }, [assets && assets.incheon ? h('img', { src: assets.incheon, alt: '' }) : null]));
+      }
+      inner = h('div', { class: 'nd-inner' });
+      page.appendChild(inner);
+      stage.appendChild(page);
+      pages.push(page);
+    }
+    function over() {
+      var limit = page.getBoundingClientRect().bottom - parseFloat(getComputedStyle(page).paddingBottom);
+      var last = inner.lastElementChild;
+      if (!last) return false;
+      var mb = parseFloat(getComputedStyle(last).marginBottom) || 0;
+      return last.getBoundingClientRect().bottom + mb > limit + 0.5;
+    }
+    function placeTable(wrap) {
+      var head = wrap.querySelector('thead'), rows = Array.prototype.slice.call(wrap.querySelectorAll('tbody tr'));
+      while (rows.length) {
+        var part = h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [head.cloneNode(true), h('tbody')])]);
+        var tb = part.querySelector('tbody');
+        inner.appendChild(part);
+        var placed = 0;
+        while (rows.length) {
+          tb.appendChild(rows[0]);
+          if (over()) { tb.removeChild(rows[0]); break; }
+          rows.shift(); placed++;
+        }
+        if (!placed) {
+          inner.removeChild(part);
+          if (inner.children.length) { newPage(false); continue; }
+          inner.appendChild(part); tb.appendChild(rows.shift());   // 한 줄도 안 들어가면 그대로 둠
+        }
+        if (rows.length) newPage(false);
+      }
+    }
+    newPage(true);
+    blocks(doc, opts).forEach(function (b) {
+      inner.appendChild(b);
+      if (!over()) return;
+      inner.removeChild(b);
+      if (b.classList.contains('nd-table-wrap')) { placeTable(b); return; }
+      if (inner.children.length) newPage(false);
+      inner.appendChild(b);
+    });
+    stage.parentNode.removeChild(stage);
+    host.innerHTML = '';
+    var wrap = h('div', { class: 'nd nd-pages' }, pages);
+    host.appendChild(wrap);
+    return pages;
+  }
+
+  /* 그림 둘레의 빈 여백(투명·흰색) 잘라내기 → Promise<dataURL> */
+  function trimImage(src, maxW) {
+    return new Promise(function (resolve) {
+      if (!src) { resolve(''); return; }
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var w = img.naturalWidth, hgt = img.naturalHeight, cv = document.createElement('canvas');
+          cv.width = w; cv.height = hgt;
+          var g = cv.getContext('2d'); g.drawImage(img, 0, 0);
+          var d = g.getImageData(0, 0, w, hgt).data, x0 = w, y0 = hgt, x1 = -1, y1 = -1;
+          for (var y = 0; y < hgt; y++) for (var x = 0; x < w; x++) {
+            var i = (y * w + x) * 4;
+            if (d[i + 3] > 20 && (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240)) {
+              if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+            }
+          }
+          if (x1 < 0) { resolve(src); return; }
+          var pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.01) + 1;
+          x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(w - 1, x1 + pad); y1 = Math.min(hgt - 1, y1 + pad);
+          var cw = x1 - x0 + 1, ch = y1 - y0 + 1, s = maxW && cw > maxW ? maxW / cw : 1;
+          var out = document.createElement('canvas');
+          out.width = Math.round(cw * s); out.height = Math.round(ch * s);
+          var o = out.getContext('2d');
+          o.fillStyle = '#fff'; o.fillRect(0, 0, out.width, out.height);
+          o.drawImage(cv, x0, y0, cw, ch, 0, 0, out.width, out.height);
+          resolve(out.toDataURL('image/png'));
+        } catch (e) { resolve(src); }
+      };
+      img.onerror = function () { resolve(''); };
+      img.src = src;
+    });
+  }
+
+  return {
+    SCHOOL: SCHOOL, h: h, trimImage: trimImage, toISO: toISO, parseISO: parseISO, addDays: addDays, fmtDate: fmtDate, fmtDay: fmtDay,
+    fmtMD: fmtMD, josa: josa, subjectOf: subjectOf, seasonLine: seasonLine, seasonName: seasonName,
+    defaults: defaults, parseItems: parseItems, parseTable: parseTable,
+    renderFlow: renderFlow, paginate: paginate
+  };
+})();
+
+/* ===== 서명 창 (손가락·펜·마우스) ===== */
+var SigPad = (function () {
+  'use strict';
+  var LW = 0.01, modal, canvas, ctx, strokes = [], cur = null, raf = 0, done = null;
+  function el(id) { return document.getElementById(id); }
+  function ensure() {
+    if (modal) return;
+    modal = document.createElement('div');
+    modal.className = 'sp-modal'; modal.hidden = true;
+    modal.innerHTML = '<div class="sp-box" role="dialog" aria-modal="true" aria-labelledby="sp-title">' +
+      '<div class="sp-head"><strong id="sp-title">서명</strong><span>손가락이나 펜으로 칸 안에 서명해 주세요.</span></div>' +
+      '<div class="sp-pad"><div class="sp-base"></div><div class="sp-wm">서명</div><canvas id="sp-canvas"></canvas></div>' +
+      '<div class="sp-act"><button type="button" class="btn sp-grow" id="sp-clear">지우기</button>' +
+      '<button type="button" class="btn" id="sp-cancel">취소</button><button type="button" class="btn primary" id="sp-done">완료</button></div></div>';
+    document.body.appendChild(modal);
+    canvas = el('sp-canvas'); ctx = canvas.getContext('2d');
+    canvas.addEventListener('pointerdown', function (e) {
+      if (e.button > 0) return;
+      e.preventDefault();
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+      cur = [pt(e)]; strokes.push(cur); schedule();
+    });
+    canvas.addEventListener('pointermove', function (e) {
+      if (!cur) return;
+      e.preventDefault();
+      var evs = (e.getCoalescedEvents && e.getCoalescedEvents()) || [];
+      if (!evs.length) evs = [e];
+      evs.forEach(function (ev) { cur.push(pt(ev)); });
+      schedule();
+    });
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (t) { canvas.addEventListener(t, function () { cur = null; }); });
+    el('sp-clear').addEventListener('click', function () { strokes = []; draw(); });
+    el('sp-cancel').addEventListener('click', close);
+    el('sp-done').addEventListener('click', function () {
+      var n = strokes.reduce(function (a, s) { return a + s.length; }, 0);
+      if (n < 3) { if (window.toast) window.toast('서명 칸에 서명해 주세요.', 'err'); return; }
+      var cb = done, list = strokes;
+      close();
+      if (cb) cb(exportPNG(list), list);
+    });
+    window.addEventListener('resize', function () { if (!modal.hidden) fit(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal && !modal.hidden) close(); });
+  }
+  function pt(e) { var r = canvas.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.width]; }
+  function setPen(c) { c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#111'; c.fillStyle = '#111'; }
+  function paint(c, pts, scale, ox, oy, lw) {
+    if (!pts.length) return;
+    c.lineWidth = lw;
+    if (pts.length === 1) { c.beginPath(); c.arc(pts[0][0] * scale - ox, pts[0][1] * scale - oy, lw / 2, 0, Math.PI * 2); c.fill(); return; }
+    c.beginPath(); c.moveTo(pts[0][0] * scale - ox, pts[0][1] * scale - oy);
+    for (var i = 1; i < pts.length - 1; i++) {
+      var mx = (pts[i][0] + pts[i + 1][0]) / 2, my = (pts[i][1] + pts[i + 1][1]) / 2;
+      c.quadraticCurveTo(pts[i][0] * scale - ox, pts[i][1] * scale - oy, mx * scale - ox, my * scale - oy);
+    }
+    var l = pts[pts.length - 1]; c.lineTo(l[0] * scale - ox, l[1] * scale - oy); c.stroke();
+  }
+  function draw() {
+    var w = canvas.width, hh = canvas.height;
+    ctx.clearRect(0, 0, w, hh); setPen(ctx);
+    strokes.forEach(function (s) { paint(ctx, s, w, 0, 0, LW * w); });
+  }
+  function fit() {
+    var r = canvas.getBoundingClientRect(), dpr = Math.min(3, window.devicePixelRatio || 1);
+    canvas.width = Math.max(1, Math.round(r.width * dpr)); canvas.height = Math.max(1, Math.round(r.height * dpr));
+    draw();
+  }
+  function schedule() { if (!raf) raf = requestAnimationFrame(function () { raf = 0; draw(); }); }
+  function exportPNG(list) {
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    list.forEach(function (s) { s.forEach(function (p) { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); }); });
+    var S = 700, lw = LW * S, pad = lw * 1.5 + 4, c = document.createElement('canvas');
+    c.width = Math.max(10, Math.ceil((x1 - x0) * S + pad * 2)); c.height = Math.max(10, Math.ceil((y1 - y0) * S + pad * 2));
+    var g = c.getContext('2d'); setPen(g);
+    list.forEach(function (s) { paint(g, s, S, x0 * S - pad, y0 * S - pad, lw); });
+    return c.toDataURL('image/png');
+  }
+  function open(title, prev, cb) {
+    ensure();
+    strokes = (prev || []).map(function (s) { return s.slice(); });
+    done = cb;
+    el('sp-title').textContent = title;
+    modal.hidden = false;
+    document.body.classList.add('sp-open');
+    requestAnimationFrame(fit);
+  }
+  function close() { modal.hidden = true; cur = null; done = null; document.body.classList.remove('sp-open'); }
+  return { open: open };
+})();
+
+</script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var API = /^https:\/\//.test(window.API_URL) ? window.API_URL : '';
+  var S = { id: '', doc: null, assets: {}, sig: { student: '', parent: '' }, strokes: { student: null, parent: null }, busy: false };
+  var tt = 0;
+  function toast(msg, kind, ms) {
+    var t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (kind ? ' ' + kind : '');
+    clearTimeout(tt); tt = setTimeout(function () { t.className = 'toast'; }, ms || 3500);
+  }
+  window.toast = toast;
+  function banner(msg, kind) {
+    var b = $('#banner'); b.innerHTML = '';
+    if (!msg) return;
+    var d = document.createElement('div'); d.className = 'banner ' + kind; d.textContent = msg; b.appendChild(d);
+  }
+  function store(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function api(action, data) {
+    if (!API) return Promise.reject(new Error('서버 주소가 없습니다.'));
+    return fetch(API, { method: 'POST', body: JSON.stringify(Object.assign({ action: action }, data || {})) })
+      .then(function (r) { return r.text(); }, function () { throw new Error('인터넷 연결을 확인하고 다시 눌러 주세요.'); })
+      .then(function (t) {
+        var j; try { j = JSON.parse(t); } catch (e) { throw new Error('잠시 후 다시 눌러 주세요. (서버 응답 오류)'); }
+        if (!j.ok) throw new Error(j.error || '처리하지 못했습니다.');
+        return j;
+      });
+  }
+  function noticeId() {
+    var p = (window.PRELOAD && window.PRELOAD.id) || '';
+    if (!p) { var m = /[?&]n=([a-z0-9]+)/.exec(location.search); p = m ? m[1] : ''; }
+    return p;
+  }
+
+  /* ---------- 문서 보이기 ---------- */
+  function show(doc, assets) {
+    S.doc = doc;
+    $('#loading').hidden = true;
+    $('#barTitle').textContent = doc.title;
+    document.title = doc.title + ' - 세일고등학교';
+    ND.renderFlow(doc, assets, $('#docHost'), { interactive: doc.type === 'reply' });
+    $('#btnPrint').hidden = false;
+    if (doc.type === 'reply') setupReply(doc);
+  }
+  function prep(raw) {
+    var a = raw || {};
+    return Promise.all([ND.trimImage(a.emblem, 360), ND.trimImage(a.slogan, 700), ND.trimImage(a.incheon, 700)])
+      .then(function (r) { return { emblem: r[0], slogan: r[1], incheon: r[2] }; });
+  }
+  function start() {
+    var P = window.PRELOAD;
+    S.id = noticeId();
+    // 미리 넣어 준 내용이 없으면 Apps Script 화면 주소에서 ?n= 값을 읽음
+    if (!S.id && !(P && P.notice) && window.google && google.script && google.script.url) {
+      google.script.url.getLocation(function (loc) {
+        S.id = String(((loc && loc.parameter) || {}).n || '');
+        load2(P);
+      });
+      return;
+    }
+    load2(P);
+  }
+  function load2(P) {
+    if (P && P.missing) { fail('가정통신문을 찾을 수 없어요. 받은 주소를 다시 확인해 주세요.'); return; }
+    var got = P && P.notice ? Promise.resolve({ notice: P.notice, assets: P.assets })
+      : S.id ? api('getNotice', { id: S.id }) : Promise.reject(new Error('가정통신문 주소가 올바르지 않아요. 받은 주소나 QR코드로 다시 열어 주세요.'));
+    got.then(function (j) {
+      return prep(j.assets).then(function (a) { S.assets = a; show(j.notice, a); });
+    }).catch(function (e) { fail(e.message); });
+  }
+  function fail(msg) {
+    $('#loading').hidden = true; banner(msg, 'err');
+    if (!S.id && /\.github\.io$/.test(location.hostname)) {   // 교사가 주소만 열었을 때
+      var p = document.createElement('p'); p.style.cssText = 'text-align:center;margin:30px 0;font-size:16px';
+      var a = document.createElement('a'); a.href = 'make.html'; a.className = 'btn primary'; a.style.textDecoration = 'none';
+      a.textContent = '선생님: 가정통신문 만들기 화면으로 가기';
+      p.appendChild(a); $('#docHost').appendChild(p);
+    }
+  }
+
+  /* ---------- 회신서 ---------- */
+  function el(id) { return document.getElementById(id); }
+  function setupReply(doc) {
+    $('#submitArea').hidden = false;
+    var r = doc.reply || {};
+    var today = ND.toISO(new Date());
+    var prev = null; try { prev = JSON.parse(load('nv_sub_' + S.id) || 'null'); } catch (e) {}
+    if (prev) banner('이 기기에서 ' + prev.time + '에 회신서를 제출했어요 (' + prev.who + '). 고칠 내용이 있으면 다시 작성해서 제출하면 돼요.', 'ok');
+    else if (r.deadline && today > r.deadline) banner('회신 기한(' + ND.fmtDay(r.deadline) + ')이 지났어요. 그래도 제출할 수 있어요.', 'warn');
+
+    // 학생·보호자 이름을 서명 줄에도 보이기
+    function mirror(src, dst) { var s = el(src), d = el(dst); if (!s || !d) return; s.addEventListener('input', function () { d.textContent = s.value.trim(); }); }
+    mirror('f-sname', 'm-student'); mirror('f-pname', 'm-parent');
+    ['f-class', 'f-num'].forEach(function (id) {
+      el(id).addEventListener('input', function () { this.value = this.value.replace(/\D/g, '').slice(0, 2); });
+    });
+    var ph = el('f-phone');
+    if (ph) ph.addEventListener('input', function () {
+      var d = this.value.replace(/\D/g, '').slice(0, 11);
+      this.value = d.length < 4 ? d : d.length < 8 ? d.slice(0, 3) + '-' + d.slice(3) : d.slice(0, 3) + '-' + d.slice(3, d.length - 4) + '-' + d.slice(-4);
+    });
+    document.querySelectorAll('#slip input, #slip select, #slip textarea').forEach(function (x) {
+      x.addEventListener('input', function () { clearBad(x); }); x.addEventListener('change', function () { clearBad(x); });
+    });
+    document.querySelectorAll('#slip input[name="f-choice"]').forEach(function (x) {
+      x.addEventListener('change', function () { clearBad(el('f-options')); });
+    });
+    document.querySelectorAll('.sig-slot').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var who = b.getAttribute('data-who'), label = who === 'student' ? '학생' : '보호자';
+        var nm = (el(who === 'student' ? 'f-sname' : 'f-pname') || {}).value || '';
+        SigPad.open(label + ' 서명' + (nm.trim() ? ' (' + nm.trim() + ')' : ''), S.strokes[who], function (url, strokes) {
+          S.sig[who] = url; S.strokes[who] = strokes;
+          b.querySelector('img').src = url; b.classList.add('signed'); clearBad(b);
+          b.setAttribute('aria-label', label + ' 서명 다시 하기');
+        });
+      });
+    });
+    $('#btnSubmit').addEventListener('click', submit);
+
+    // 회신서가 화면에 안 보일 때 '회신서 작성하기' 버튼
+    var fab = $('#fab'), slip = el('slip');
+    fab.addEventListener('click', function () { slip.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { fab.hidden = es[0].isIntersecting || es[0].boundingClientRect.top < 0; }, { threshold: 0, rootMargin: '0px 0px -35% 0px' }).observe(slip);
+    }
+  }
+  function clearBad(x) { if (x) x.classList.remove('bad'); }
+  function form() {
+    var r = S.doc.reply || {}, ch = document.querySelector('#slip input[name="f-choice"]:checked');
+    var extras = [], i = 0;
+    while (el('f-extra-' + i)) { extras.push(el('f-extra-' + i).value.trim()); i++; }
+    return {
+      grade: el('f-grade').value, cls: el('f-class').value.trim(), num: el('f-num').value.trim(),
+      sname: el('f-sname').value.trim(), pname: el('f-pname').value.trim(), phone: el('f-phone') ? el('f-phone').value.trim() : '',
+      choice: ch ? ch.value : '', extras: extras, sigStudent: S.sig.student, sigParent: S.sig.parent, needPhone: !!r.phone
+    };
+  }
+  function check(f) {
+    var hasOpt = !!document.querySelector('#slip input[name="f-choice"]');
+    if (!f.grade) return ['f-grade', '학년을 골라 주세요.'];
+    if (!f.cls || +f.cls < 1) return ['f-class', '반을 숫자로 적어 주세요.'];
+    if (!f.num || +f.num < 1) return ['f-num', '번호를 숫자로 적어 주세요.'];
+    if (!f.sname) return ['f-sname', '학생 이름을 적어 주세요.'];
+    if (!f.pname) return ['f-pname', '보호자 이름을 적어 주세요.'];
+    if (f.needPhone && !/^01\d{8,9}$/.test(f.phone.replace(/\D/g, ''))) return ['f-phone', '보호자 연락처를 확인해 주세요. (예: 010-1234-5678)'];
+    if (hasOpt && !f.choice) return ['f-options', '선택 항목을 골라 주세요.'];
+    if (!f.sigStudent) return [document.querySelector('.sig-slot[data-who="student"]'), '학생 서명을 해 주세요.'];
+    if (!f.sigParent) return [document.querySelector('.sig-slot[data-who="parent"]'), '보호자 서명을 해 주세요.'];
+    return null;
+  }
+  function submit() {
+    if (S.busy) return;
+    var f = form(), bad = check(f);
+    if (bad) {
+      var t = typeof bad[0] === 'string' ? el(bad[0]) : bad[0];
+      t.classList.add('bad'); t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (t.focus && t.tagName !== 'DIV') setTimeout(function () { t.focus({ preventScroll: true }); }, 350);
+      toast(bad[1], 'err'); return;
+    }
+    S.busy = true;
+    var b = $('#btnSubmit'); b.disabled = true; b.textContent = '제출하는 중…';
+    api('submitReply', { id: S.id, form: f }).then(function (r) {
+      var who = f.grade + '학년 ' + f.cls + '반 ' + f.num + '번 ' + f.sname;
+      store('nv_sub_' + S.id, JSON.stringify({ time: r.time, who: who }));
+      var box = $('#doneBox'); box.innerHTML = '';
+      var d = document.createElement('div'); d.className = 'done';
+      d.appendChild(document.createElement('b')).textContent = '✓ 제출되었습니다';
+      d.appendChild(document.createElement('div')).textContent = who + ' · ' + r.time + (r.updated ? ' (최신 내용으로 바뀜)' : '');
+      d.appendChild(document.createElement('div')).textContent = '이 화면은 닫아도 됩니다.';
+      box.appendChild(d);
+      banner('');
+      b.textContent = '고쳐서 다시 제출하기';
+      d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      toast('제출되었습니다. 감사합니다.', 'ok');
+    }).catch(function (e) {
+      b.textContent = '회신서 제출하기';
+      toast(e.message, 'err', 6000);
+    }).then(function () { S.busy = false; b.disabled = false; });
+  }
+
+  /* ---------- 인쇄 (A4, PDF와 같은 모양) ---------- */
+  $('#btnPrint').addEventListener('click', function () {
+    if (!S.doc) return;
+    var filled = null;
+    if (S.doc.type === 'reply') {
+      var f = form();
+      filled = { grade: f.grade, cls: f.cls, num: f.num, sname: f.sname, pname: f.pname, phone: f.phone, choice: f.choice, extras: f.extras,
+        sig: { student: f.sigStudent, parent: f.sigParent }, date: f.sname || f.pname ? ND.toISO(new Date()) : '' };
+      if (!f.grade) { filled.grade = ''; }
+    }
+    ND.paginate(S.doc, S.assets, $('#printHost'), { filled: filled });
+    setTimeout(function () { window.print(); }, 300);
+  });
+
+  start();
+})();
+</script>
+</body>
+</html>
