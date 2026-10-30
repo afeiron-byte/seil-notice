@@ -40,6 +40,8 @@
 .nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}
 .nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}
 .nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}
+.nd-item.l3{padding-left:16.5mm;text-indent:-4.5mm;font-size:10.5pt}
+.nd-item.l4{padding-left:21mm;text-indent:-4.5mm;font-size:10.5pt}
 .nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}
 .nd-item.plain{padding-left:3mm}
 .nd-table-wrap{margin:2mm 0 1mm}
@@ -183,6 +185,14 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
 .past .mm{font-size:12.5px;color:var(--sub)}
 .past .btns{grid-column:2;grid-row:1 / span 2}
 .past .empty{display:block;color:var(--sub);font-size:14px}
+.gate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px}
+.gate-box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px 20px;width:min(400px,100%);box-shadow:0 10px 40px rgba(0,0,0,.08)}
+.gate-box h2{margin:0 0 6px;font-size:20px}
+.gate-box p{margin:0 0 14px;color:var(--sub);font-size:14.5px}
+.gate-box .btn{width:100%;margin-top:12px;padding:11px}
+.gate-box .check{margin-top:10px;font-size:14px}
+.gate-box .foot{margin:14px 0 0;font-size:12.5px}
+body.locked main,body.locked .tabs,body.locked #btnNew2,body.locked #btnLogout{display:none !important}
 .restore{display:flex;gap:10px;align-items:center;background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:14px}
 .restore .btn{margin-left:auto}
 /* AI 키 안내 */
@@ -205,11 +215,25 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
 <header class="app-head">
   <h1>세일고 가정통신문 도우미 <small>작성 → 배포 → PDF 저장·메일</small></h1>
   <button type="button" class="btn sm" id="btnNew2" title="새 가정통신문 만들기">＋ 새 통신문</button>
+  <button type="button" class="btn sm" id="btnLogout" title="이 컴퓨터에서 로그아웃">로그아웃</button>
   <nav class="tabs" role="tablist">
     <button class="tab-btn" role="tab" aria-selected="true" data-tab="make">가정통신문 만들기</button>
     <button class="tab-btn" role="tab" aria-selected="false" data-tab="key">AI 키 등록 방법</button>
   </nav>
 </header>
+
+<div class="gate" id="gate" hidden>
+  <form class="gate-box" id="gateForm" autocomplete="on">
+    <h2>세일고 가정통신문 도우미</h2>
+    <p>세일고등학교 교직원만 사용할 수 있어요.<br>교직원 비밀번호를 입력해 주세요.</p>
+    <input type="text" name="username" value="세일고 교직원" autocomplete="username" hidden>
+    <input type="password" id="gatePw" autocomplete="current-password" placeholder="교직원 비밀번호" aria-label="교직원 비밀번호">
+    <label class="check"><input type="checkbox" id="gateKeep" checked> 이 컴퓨터에서 로그인 유지</label>
+    <button type="submit" class="btn primary" id="gateBtn">들어가기</button>
+    <div id="gateMsg"></div>
+    <p class="foot">비밀번호를 모르면 담당 선생님께 문의해 주세요. 여러 사람이 같이 쓰는 컴퓨터에서는 '로그인 유지'를 끄세요.</p>
+  </form>
+</div>
 
 <main>
 <!-- ================= 만들기 ================= -->
@@ -220,7 +244,7 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
 
       <details class="card" id="pastCard">
         <summary style="cursor:pointer;font-weight:700">지난 통신문 불러오기 · 회신 현황</summary>
-        <div class="hint" style="font-size:13px;color:var(--sub);margin-top:6px">배포한 통신문을 불러와 고친 뒤 다시 배포하면 이미 보낸 주소·QR코드 그대로 내용만 바뀌어요. 아래 '교사 확인 번호'가 필요해요.</div>
+        <div class="hint" style="font-size:13px;color:var(--sub);margin-top:6px">배포한 통신문을 불러와 고친 뒤 다시 배포하면 이미 보낸 주소·QR코드 그대로 내용만 바뀌어요.</div>
         <div class="btns" style="margin-top:8px"><button type="button" class="btn sm" id="btnPast">목록 보기</button></div>
         <ul class="past" id="pastList" hidden></ul>
       </details>
@@ -237,12 +261,9 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
       <div class="card">
         <h2><span class="no">2</span>기본 정보</h2>
         <div class="field"><label for="title">제목</label>
-          <input type="text" id="title" maxlength="80" placeholder="예) 2026학년도 천체관측 활동 안내">
+          <input type="text" id="title" maxlength="80" placeholder="예) 2027학년도 수시모집 관련 유의사항">
           <div class="hint">제목을 입력하면 아래 인사말과 본문이 날짜·계절에 맞게 자동으로 채워져요.</div></div>
-        <div class="field row">
-          <div><label class="lab" for="date">발행일</label><input type="date" id="date"></div>
-          <div><label class="lab" for="email">작성 교사 메일</label><input type="email" id="email" placeholder="PDF와 QR코드를 받을 메일 주소" autocomplete="email"></div>
-        </div>
+        <div class="field" style="max-width:240px"><label for="date">발행일</label><input type="date" id="date"></div>
       </div>
 
       <div class="card">
@@ -255,11 +276,10 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
         <div class="field"><label for="greeting">인사말</label><textarea id="greeting" rows="3"></textarea></div>
         <div class="field"><label for="body">안내 문단</label><textarea id="body" rows="3"></textarea></div>
         <div class="field"><label for="items">세부 항목</label><textarea id="items" rows="6"></textarea>
-          <div class="hint">한 줄에 한 항목씩 적으면 번호가 자동으로 붙어요. 줄 앞에 <b>띄어쓰기 2칸</b>을 넣으면 하위 항목, <b>※</b>로 시작하면 참고 문구가 돼요.</div>
-          <div class="row" style="margin-top:6px;max-width:330px"><label class="lab" for="numStyle" style="flex:0 0 auto;margin:0">번호 형식</label>
-            <select id="numStyle"><option value="1">1. → 가.</option><option value="ga">가. → 1)</option></select></div></div>
-        <div class="field"><label for="table">표 <span style="font-weight:400;color:var(--sub)">(필요할 때만)</span></label><textarea id="table" rows="3" placeholder="엑셀이나 한글 표를 복사해 붙여 넣거나, 칸을 | 로 나눠 적으세요. 첫 줄은 제목 줄이에요."></textarea></div>
-        <div class="field"><label for="closing">마무리 문장</label><input type="text" id="closing"></div>
+          <div class="hint">한 줄에 한 항목씩 적으면 번호가 <b>1. → 가. → 1) → 가)</b> 순서로 자동으로 붙어요.
+            하위 항목은 줄 앞에서 <span class="kbd">Tab</span> 키(또는 띄어쓰기 2칸)를 누를 때마다 한 단계씩 들어가요. <b>※</b>로 시작하면 참고 문구가 돼요.</div></div>
+        <div class="field"><label for="table">표 <span style="font-weight:400;color:var(--sub)">(선택)</span></label><textarea id="table" rows="3" placeholder="표를 넣으려면 엑셀에서 데이터를 작성한 후 복사해 붙여 넣으세요."></textarea></div>
+        <div class="field"><label for="closing">마무리 문장 <span style="font-weight:400;color:var(--sub)">(선택)</span></label><input type="text" id="closing" placeholder="예) 학부모님의 많은 관심과 협조를 부탁드립니다."></div>
         <div class="field"><label for="contact">문의처 <span style="font-weight:400;color:var(--sub)">(선택)</span></label><input type="text" id="contact" placeholder="예) 문의 : 정보과학부 032-000-0000"></div>
       </div>
 
@@ -280,9 +300,9 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
 
       <div class="card">
         <h2><span class="no" id="pubNo">4</span>완성하고 배포하기</h2>
-        <div class="field"><label for="code">교사 확인 번호</label>
-          <input type="password" id="code" maxlength="30" autocomplete="off" placeholder="학교에서 정한 번호">
-          <div class="hint">배포하면 ① 가정용 웹페이지 주소가 만들어지고 ② PDF가 구글 드라이브 '세일고등학교 › 가정통신문' 폴더에 저장되며 ③ 입력한 메일로 PDF와 가정용 QR코드가 전송돼요.</div></div>
+        <div class="field"><label for="email">PDF와 QR코드를 받을 메일 주소</label>
+          <input type="email" id="email" placeholder="예) 이름@icedu.kr" autocomplete="email">
+          <div class="hint">배포하면 ① 가정용 웹페이지 주소가 만들어지고 ② 입력한 메일로 PDF와 가정용 QR코드가 전송돼요.</div></div>
         <div class="btns" style="margin-top:12px">
           <button type="button" class="btn primary" id="btnPublish">완성하고 배포하기</button>
           <button type="button" class="btn" id="btnPdf">PDF 미리 내려받기</button>
@@ -291,7 +311,7 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
           <li data-step="save">가정용 웹페이지 만들기</li>
           <li data-step="pdf">PDF 만들기</li>
           <li data-step="qr">메일로 보낼 QR코드 만들기</li>
-          <li data-step="upload">드라이브 저장·메일 보내기</li>
+          <li data-step="upload">PDF·QR코드 메일 보내기</li>
         </ol>
         <div id="pubStatus"></div>
         <div class="result" id="result" hidden>
@@ -333,11 +353,11 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
       프로젝트를 고르라는 창이 나오면 목록의 첫 번째 프로젝트를 고르거나 <span class="kbd">새 프로젝트에서 만들기</span>를 누르면 돼요.</p></div></div>
 
     <div class="gstep"><div class="n">4</div><div><h3>키 복사하기</h3>
-      <p><b>AIza</b>로 시작하는 긴 글자(키)가 만들어지면 옆의 <span class="kbd">복사</span> 버튼을 누르세요.</p></div></div>
+      <p><b>AQ.</b>(또는 예전 방식인 <b>AIza</b>)로 시작하는 긴 글자(키)가 만들어지면 옆의 <span class="kbd">복사</span> 버튼을 누르세요.</p></div></div>
 
     <div class="gstep"><div class="n">5</div><div><h3>여기에 붙여 넣으면 끝!</h3>
       <p>아래 칸에 붙여 넣고(<span class="kbd">Ctrl</span>+<span class="kbd">V</span>) <span class="kbd">저장하고 확인</span>을 누르세요.</p>
-      <div class="keyrow" style="margin-top:8px"><input type="password" id="apiKey" placeholder="AIza로 시작하는 키" autocomplete="off" spellcheck="false">
+      <div class="keyrow" style="margin-top:8px"><input type="password" id="apiKey" placeholder="AQ. 또는 AIza로 시작하는 키" autocomplete="off" spellcheck="false">
         <button type="button" class="btn sm" id="keyShow">보기</button></div>
       <div class="btns" style="margin-top:8px"><button type="button" class="btn primary" id="keySave">저장하고 확인</button><button type="button" class="btn" id="keyDel">키 지우기</button></div>
       <div id="keyStatus"></div></div></div>
@@ -355,7 +375,7 @@ details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--a
 
 <script>window.API_URL = 'https://script.google.com/macros/s/AKfycby6hyj7GkVLLW0-CaPQ-SnRbKkd-k3l9xRBzleEwrfwTGJgpQ5bjHcAqlaud_2Q17Pa/exec'; window.PRELOAD = '__PRELOAD__'; if (typeof window.PRELOAD === 'string') window.PRELOAD = null;</script>
 <script>
-var ND_CSS = "/* ===== 가정통신문 문서 양식 (세일고등학교) ===== */\n.nd{--nd-gray:#808080;--nd-muted:#595959;--nd-hdr:#e7e6e6;--nd-lbl:#f2f2f2;\n  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;\n  color:#111;font-size:11pt;line-height:1.56;-webkit-print-color-adjust:exact;print-color-adjust:exact}\n.nd *{box-sizing:border-box}\n:where(.nd) p{margin:0}\n.nd img{display:block;max-width:100%}\n\n/* 종이(A4) 한 쪽 */\n.nd-page{width:210mm;height:297mm;padding:9mm 20mm 8mm;background:#fff;overflow:hidden;position:relative}\n.nd-inner > :first-child{margin-top:0 !important}\n\n/* 머리 부분 */\n.nd-top{display:flex;justify-content:flex-end;min-height:9.3mm}\n.nd-top img{width:55.6mm;height:auto}\n.nd-site{font-size:9pt;line-height:1.3;margin:1mm 0 .8mm}\n.nd-hdr{display:grid;grid-template-columns:20fr 37fr 62fr 51fr;border-top:2.25pt solid var(--nd-gray);\n  border-bottom:2.25pt solid var(--nd-gray);min-height:21mm}\n.nd-hdr > div{display:flex;align-items:center;justify-content:center;padding:0 1.5mm}\n.nd-hdr-emblem img{width:16.9mm;height:auto}\n.nd-hdr-school{flex-direction:column;align-items:flex-start !important;border-right:1pt solid var(--nd-gray);line-height:1.35}\n.nd-hdr-school .m{font-size:9pt}\n.nd-hdr-school .s{font-size:14pt;font-weight:700}\n.nd-hdr-title{background:var(--nd-hdr);border-right:1pt solid var(--nd-gray);white-space:nowrap;font-size:24pt;font-weight:700;line-height:1.2}\n.nd-hdr-slogan img{width:46.6mm;height:auto}\n.nd-title{font-size:16pt;font-weight:700;text-align:center;line-height:1.4;margin:4mm 0 2.5mm;word-break:keep-all}\n\n/* 본문 */\n.nd-p{text-align:justify;word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}\n.nd-p + .nd-p{margin-top:0}\n.nd-gap{height:2.4mm}\n.nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}\n.nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}\n.nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}\n.nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}\n.nd-item.plain{padding-left:3mm}\n.nd-table-wrap{margin:2mm 0 1mm}\n.nd-table{width:100%;border-collapse:collapse;table-layout:auto;font-size:10pt;line-height:1.4}\n.nd-table th,.nd-table td{border:.75pt solid #000;padding:1.2mm 1.5mm;text-align:center;vertical-align:middle;word-break:keep-all}\n.nd-table th{background:var(--nd-lbl);font-weight:700}\n.nd-closing{margin-top:2.4mm}\n.nd-contact{text-align:center;margin-top:3mm;font-size:10.5pt}\n\n/* 날짜·학교장 */\n.nd-sign{position:relative;margin-top:5mm;padding-bottom:1mm}\n.nd-date{font-size:14pt;text-align:center;line-height:1.4}\n.nd-principal{font-size:20pt;font-weight:700;text-align:center;letter-spacing:3pt;line-height:1.45}\n\n/* 절취선·회신서 */\n.nd-slipwrap{margin-top:5mm}\n.nd-cut{display:flex;align-items:center;gap:2.5mm;font-size:9pt;color:var(--nd-muted);letter-spacing:2pt;line-height:1.3;margin:0 0 3.5mm}\n.nd-cut::before,.nd-cut::after{content:\"\";flex:1;border-top:1px dashed #7a7a7a}\n.nd-slip-title{font-size:15pt;font-weight:700;text-align:center;line-height:1.4;margin:0 0 2mm;word-break:keep-all}\n.nd-slip-table{width:100%;border-collapse:collapse;table-layout:fixed}\n.nd-slip-table th,.nd-slip-table td{border:.75pt solid #000;height:9mm;padding:0 1.5mm;vertical-align:middle;text-align:center}\n.nd-slip-table th{background:var(--nd-lbl);font-size:10.5pt;font-weight:700;line-height:1.3;word-break:keep-all}\n.nd-slip-table th small{display:block;font-size:8.5pt;font-weight:400}\n.nd-slip-table td.tall{height:13mm}\n.nd-slip-table td.ex{text-align:left;white-space:pre-wrap;font-size:10pt;line-height:1.4;padding:1mm 2mm}\n.nd-slip-table .cls{white-space:nowrap;letter-spacing:.5pt}\n.nd-slip-text{margin-top:2.4mm;text-align:justify;word-break:keep-all;white-space:pre-wrap}\n.nd-options{display:flex;justify-content:center;flex-wrap:wrap;gap:2mm 9mm;font-size:12pt;margin:1.5mm 0}\n.nd-opt{display:inline-flex;align-items:center;gap:1.6mm}\n.nd-box{display:inline-flex;align-items:center;justify-content:center;width:.95em;height:.95em;border:1.2px solid #222;line-height:1}\n.nd-slip-date{text-align:right;margin-top:2mm;white-space:pre}\n.nd-sline{display:flex;justify-content:flex-end;align-items:center;min-height:8mm}\n.nd-sline .lb{white-space:nowrap}\n.nd-sline .nm{display:inline-block;width:32mm;padding-left:4mm;white-space:nowrap;overflow:hidden}\n.nd-sline .mk{position:relative;white-space:nowrap}\n.nd-sline .sig{position:absolute;right:-3mm;top:50%;transform:translateY(-50%);width:24mm;height:9mm;max-width:none;object-fit:contain}\n.nd-slip-note{font-size:9.5pt;color:#333;margin-top:1.5mm}\n\n/* ===== 화면에서 흐르는 형태(가정용) ===== */\n.nd-flow{background:#fff}\n.nd-flow .nd-sheet{container-type:inline-size}\n.nd-flow .nd-top img{width:32.7cqw}\n.nd-flow .nd-hdr{min-height:12.35cqw}\n.nd-flow .nd-hdr > div{padding:0 .88cqw}\n.nd-flow .nd-hdr-emblem img{width:9.95cqw}\n.nd-flow .nd-hdr-school .m{font-size:1.87cqw}\n.nd-flow .nd-hdr-school .s{font-size:2.9cqw}\n.nd-flow .nd-hdr-title{font-size:4.98cqw}\n.nd-flow .nd-hdr-slogan img{width:27.4cqw}\n";
+var ND_CSS = "/* ===== 가정통신문 문서 양식 (세일고등학교) ===== */\n.nd{--nd-gray:#808080;--nd-muted:#595959;--nd-hdr:#e7e6e6;--nd-lbl:#f2f2f2;\n  font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;\n  color:#111;font-size:11pt;line-height:1.56;-webkit-print-color-adjust:exact;print-color-adjust:exact}\n.nd *{box-sizing:border-box}\n:where(.nd) p{margin:0}\n.nd img{display:block;max-width:100%}\n\n/* 종이(A4) 한 쪽 */\n.nd-page{width:210mm;height:297mm;padding:9mm 20mm 8mm;background:#fff;overflow:hidden;position:relative}\n.nd-inner > :first-child{margin-top:0 !important}\n\n/* 머리 부분 */\n.nd-top{display:flex;justify-content:flex-end;min-height:9.3mm}\n.nd-top img{width:55.6mm;height:auto}\n.nd-site{font-size:9pt;line-height:1.3;margin:1mm 0 .8mm}\n.nd-hdr{display:grid;grid-template-columns:20fr 37fr 62fr 51fr;border-top:2.25pt solid var(--nd-gray);\n  border-bottom:2.25pt solid var(--nd-gray);min-height:21mm}\n.nd-hdr > div{display:flex;align-items:center;justify-content:center;padding:0 1.5mm}\n.nd-hdr-emblem img{width:16.9mm;height:auto}\n.nd-hdr-school{flex-direction:column;align-items:flex-start !important;border-right:1pt solid var(--nd-gray);line-height:1.35}\n.nd-hdr-school .m{font-size:9pt}\n.nd-hdr-school .s{font-size:14pt;font-weight:700}\n.nd-hdr-title{background:var(--nd-hdr);border-right:1pt solid var(--nd-gray);white-space:nowrap;font-size:24pt;font-weight:700;line-height:1.2}\n.nd-hdr-slogan img{width:46.6mm;height:auto}\n.nd-title{font-size:16pt;font-weight:700;text-align:center;line-height:1.4;margin:4mm 0 2.5mm;word-break:keep-all}\n\n/* 본문 */\n.nd-p{text-align:justify;word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}\n.nd-p + .nd-p{margin-top:0}\n.nd-gap{height:2.4mm}\n.nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}\n.nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}\n.nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}\n.nd-item.l3{padding-left:16.5mm;text-indent:-4.5mm;font-size:10.5pt}\n.nd-item.l4{padding-left:21mm;text-indent:-4.5mm;font-size:10.5pt}\n.nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}\n.nd-item.plain{padding-left:3mm}\n.nd-table-wrap{margin:2mm 0 1mm}\n.nd-table{width:100%;border-collapse:collapse;table-layout:auto;font-size:10pt;line-height:1.4}\n.nd-table th,.nd-table td{border:.75pt solid #000;padding:1.2mm 1.5mm;text-align:center;vertical-align:middle;word-break:keep-all}\n.nd-table th{background:var(--nd-lbl);font-weight:700}\n.nd-closing{margin-top:2.4mm}\n.nd-contact{text-align:center;margin-top:3mm;font-size:10.5pt}\n\n/* 날짜·학교장 */\n.nd-sign{position:relative;margin-top:5mm;padding-bottom:1mm}\n.nd-date{font-size:14pt;text-align:center;line-height:1.4}\n.nd-principal{font-size:20pt;font-weight:700;text-align:center;letter-spacing:3pt;line-height:1.45}\n\n/* 절취선·회신서 */\n.nd-slipwrap{margin-top:5mm}\n.nd-cut{display:flex;align-items:center;gap:2.5mm;font-size:9pt;color:var(--nd-muted);letter-spacing:2pt;line-height:1.3;margin:0 0 3.5mm}\n.nd-cut::before,.nd-cut::after{content:\"\";flex:1;border-top:1px dashed #7a7a7a}\n.nd-slip-title{font-size:15pt;font-weight:700;text-align:center;line-height:1.4;margin:0 0 2mm;word-break:keep-all}\n.nd-slip-table{width:100%;border-collapse:collapse;table-layout:fixed}\n.nd-slip-table th,.nd-slip-table td{border:.75pt solid #000;height:9mm;padding:0 1.5mm;vertical-align:middle;text-align:center}\n.nd-slip-table th{background:var(--nd-lbl);font-size:10.5pt;font-weight:700;line-height:1.3;word-break:keep-all}\n.nd-slip-table th small{display:block;font-size:8.5pt;font-weight:400}\n.nd-slip-table td.tall{height:13mm}\n.nd-slip-table td.ex{text-align:left;white-space:pre-wrap;font-size:10pt;line-height:1.4;padding:1mm 2mm}\n.nd-slip-table .cls{white-space:nowrap;letter-spacing:.5pt}\n.nd-slip-text{margin-top:2.4mm;text-align:justify;word-break:keep-all;white-space:pre-wrap}\n.nd-options{display:flex;justify-content:center;flex-wrap:wrap;gap:2mm 9mm;font-size:12pt;margin:1.5mm 0}\n.nd-opt{display:inline-flex;align-items:center;gap:1.6mm}\n.nd-box{display:inline-flex;align-items:center;justify-content:center;width:.95em;height:.95em;border:1.2px solid #222;line-height:1}\n.nd-slip-date{text-align:right;margin-top:2mm;white-space:pre}\n.nd-sline{display:flex;justify-content:flex-end;align-items:center;min-height:8mm}\n.nd-sline .lb{white-space:nowrap}\n.nd-sline .nm{display:inline-block;width:32mm;padding-left:4mm;white-space:nowrap;overflow:hidden}\n.nd-sline .mk{position:relative;white-space:nowrap}\n.nd-sline .sig{position:absolute;right:-3mm;top:50%;transform:translateY(-50%);width:24mm;height:9mm;max-width:none;object-fit:contain}\n.nd-slip-note{font-size:9.5pt;color:#333;margin-top:1.5mm}\n\n/* ===== 화면에서 흐르는 형태(가정용) ===== */\n.nd-flow{background:#fff}\n.nd-flow .nd-sheet{container-type:inline-size}\n.nd-flow .nd-top img{width:32.7cqw}\n.nd-flow .nd-hdr{min-height:12.35cqw}\n.nd-flow .nd-hdr > div{padding:0 .88cqw}\n.nd-flow .nd-hdr-emblem img{width:9.95cqw}\n.nd-flow .nd-hdr-school .m{font-size:1.87cqw}\n.nd-flow .nd-hdr-school .s{font-size:2.9cqw}\n.nd-flow .nd-hdr-title{font-size:4.98cqw}\n.nd-flow .nd-hdr-slogan img{width:27.4cqw}\n";
 /* ===== 가정통신문 공통: 기본 문장, 문서 만들기, A4 쪽 나누기 ===== */
 var ND = (function () {
   'use strict';
@@ -456,7 +476,6 @@ var ND = (function () {
         '납입금액 : 아래 표와 같음\n' +
         '납입방법 : 신용카드 또는 개별 CMS 통장에서 인출일에 자동인출\n' +
         '영수증이 필요하신 분은 본교 행정실이나 학교 홈페이지에서 발급받으실 수 있습니다.';
-      d.numStyle = 'ga';
       d.table = '학년\t금액\t기간\t비고\n1학년\t\t\t\n2학년\t\t\t\n3학년\t\t\t';
       d.closing = '';
       d.contact = '문의전화 : ' + SCHOOL.adminPhone + '(행정실)';
@@ -469,9 +488,8 @@ var ND = (function () {
         d.body = josa(subj, '과/와') + ' 관련하여 다음과 같이 안내해 드립니다. 가정에서도 내용을 확인하시어 자녀가 잘 준비할 수 있도록 지도해 주시기 바랍니다.';
       }
       d.items = '일시 : ' + fmtDay(addDays(iso, 7)) + '\n장소 : \n대상 : \n내용 : ';
-      d.numStyle = '1';
       d.table = '';
-      d.closing = '학부모님의 많은 관심과 협조를 부탁드립니다.';
+      d.closing = '';
       d.contact = '';
     }
     var r = { phone: true, fields: '', deadline: deadline, note: '' };
@@ -492,27 +510,31 @@ var ND = (function () {
     return d;
   }
 
-  /* ---------- 세부 항목 (줄마다 하나, 들여쓰기 = 하위 항목) ---------- */
-  function parseItems(text, style) {
-    var out = [], top = 0, sub = 0;
+  /* ---------- 세부 항목: 1. → 가. → 1) → 가)  (줄 앞 띄어쓰기 2칸마다 한 단계) ---------- */
+  function itemLabel(level, n) {
+    var g = GANADA.charAt((n - 1) % 14);
+    return [n + '.', g + '.', n + ')', g + ')'][level];
+  }
+  function parseItems(text) {
+    var out = [], cnt = [0, 0, 0, 0], prev = -1;
     String(text || '').split(/\r?\n/).forEach(function (raw) {
       if (!raw.trim()) return;
-      var indent = /^(\s{2,}|\t|\s*[-·•ㆍ]\s)/.test(raw);
-      var line = raw.trim().replace(/^[-·•ㆍ]\s*/, '');
+      var lead = /^[ \t　]*/.exec(raw)[0].replace(/\t/g, '  ').replace(/　/g, '  ').length;
+      var level = Math.min(3, Math.floor(lead / 2));
+      var line = raw.trim();
+      if (/^[-·•ㆍ]\s/.test(line)) { line = line.replace(/^[-·•ㆍ]\s*/, ''); if (level === 0) level = 1; }
       if (/^[※*]/.test(line)) { out.push({ level: 'note', label: '※', text: line.replace(/^[※*]\s*/, '') }); return; }
-      if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: indent ? 'l2' : 'plain', label: '', text: line }); return; }
-      line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|[①-⑳])\s*/, '');
-      if (indent && top > 0) {
-        sub++;
-        out.push({ level: 'l2', label: style === 'ga' ? sub + ')' : GANADA.charAt((sub - 1) % 14) + '.', text: line });
-      } else {
-        top++; sub = 0;
-        out.push({ level: 'l1', label: style === 'ga' ? GANADA.charAt((top - 1) % 14) + '.' : top + '.', text: line });
-      }
+      if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: level ? 'l' + (level + 1) : 'plain', label: '', text: line }); return; }
+      line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|\([가-하]\)|[①-⑳])\s*/, '');
+      if (level > prev + 1) level = prev + 1;             // 단계를 건너뛰지 않게
+      cnt[level]++;
+      for (var k = level + 1; k < 4; k++) cnt[k] = 0;
+      prev = level;
+      out.push({ level: 'l' + (level + 1), label: itemLabel(level, cnt[level]), text: line });
     });
     return out;
   }
-  /* 표: 엑셀·한글에서 복사(탭) 또는 | 로 구분 */
+  /* 표: 엑셀·한글에서 복사(탭으로 구분). 합친 칸은 '<<'(왼쪽과 합침), '^^'(위와 합침) */
   function parseTable(text) {
     var lines = String(text || '').split(/\r?\n/).filter(function (l) { return l.trim(); });
     if (!lines.length) return null;
@@ -547,10 +569,36 @@ var ND = (function () {
     ];
   }
   function tableBlock(rows) {
-    var thead = h('thead', null, [h('tr', null, rows[0].map(function (c) { return h('th', { text: c }); }))]);
-    var tbody = h('tbody', null, rows.slice(1).map(function (r) {
-      return h('tr', null, r.map(function (c) { return h('td', { text: c }); }));
-    }));
+    var R = rows.length, C = rows[0].length, used = rows.map(function (r) { return r.map(function () { return false; }); });
+    var MERGE = function (v) { return v === '<<' || v === '^^'; };
+    var head = 1, out = [];
+    for (var r = 0; r < R; r++) {
+      var cells = [];
+      for (var c = 0; c < C; c++) {
+        if (used[r][c]) continue;
+        var cs = 1, rs = 1;
+        while (c + cs < C && rows[r][c + cs] === '<<' && !used[r][c + cs]) cs++;
+        while (r + rs < R && rows[r + rs][c] === '^^' && !used[r + rs][c]) rs++;
+        if (r < head && rs > 1) head = Math.max(head, Math.min(r + rs, R - 1 > 0 ? R - 1 : 1));   // 제목 줄을 세로로 합친 경우
+        for (var i = 0; i < rs; i++) for (var j = 0; j < cs; j++) used[r + i][c + j] = true;
+        cells.push({ v: MERGE(rows[r][c]) ? '' : rows[r][c], cs: cs, rs: rs });
+      }
+      out.push(cells);
+    }
+    // 본문 줄 묶음: 세로로 합친 칸이 걸친 줄은 같은 쪽에 두기
+    var group = -1, groupEnd = -1, trs = [];
+    out.forEach(function (cells, r) {
+      var isHead = r < head;
+      if (!isHead && r > groupEnd) { group++; groupEnd = r; }
+      var tds = cells.map(function (x) {
+        var rs = isHead ? Math.min(x.rs, head - r) : x.rs;
+        if (!isHead && r + rs - 1 > groupEnd) groupEnd = r + rs - 1;
+        return h(isHead ? 'th' : 'td', { text: x.v, colspan: x.cs > 1 ? String(x.cs) : null, rowspan: rs > 1 ? String(rs) : null });
+      });
+      trs.push(h('tr', { 'data-g': isHead ? null : String(group) }, tds));
+    });
+    var thead = h('thead', null, trs.slice(0, head));
+    var tbody = h('tbody', null, trs.slice(head));
     return h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [thead, tbody])]);
   }
   function signBlock(doc) {
@@ -634,7 +682,7 @@ var ND = (function () {
       if (out.length) out.push(h('div', { class: 'nd-gap' }));
       body.forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
     }
-    var items = parseItems(doc.items, doc.numStyle);
+    var items = parseItems(doc.items);
     if (items.length) {
       out.push(h('div', { class: 'nd-gap' }));
       items.forEach(function (it) {
@@ -687,23 +735,28 @@ var ND = (function () {
       return last.getBoundingClientRect().bottom + mb > limit + 0.5;
     }
     function placeTable(wrap) {
-      var head = wrap.querySelector('thead'), rows = Array.prototype.slice.call(wrap.querySelectorAll('tbody tr'));
-      while (rows.length) {
+      var head = wrap.querySelector('thead'), groups = [];
+      Array.prototype.slice.call(wrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+        var g = tr.getAttribute('data-g');
+        if (groups.length && groups[groups.length - 1].g === g) groups[groups.length - 1].rows.push(tr);
+        else groups.push({ g: g, rows: [tr] });
+      });
+      while (groups.length) {
         var part = h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [head.cloneNode(true), h('tbody')])]);
         var tb = part.querySelector('tbody');
         inner.appendChild(part);
         var placed = 0;
-        while (rows.length) {
-          tb.appendChild(rows[0]);
-          if (over()) { tb.removeChild(rows[0]); break; }
-          rows.shift(); placed++;
+        while (groups.length) {
+          groups[0].rows.forEach(function (tr) { tb.appendChild(tr); });
+          if (over()) { groups[0].rows.forEach(function (tr) { tb.removeChild(tr); }); break; }
+          groups.shift(); placed++;
         }
         if (!placed) {
           inner.removeChild(part);
           if (inner.children.length) { newPage(false); continue; }
-          inner.appendChild(part); tb.appendChild(rows.shift());   // 한 줄도 안 들어가면 그대로 둠
+          inner.appendChild(part); groups.shift().rows.forEach(function (tr) { tb.appendChild(tr); });   // 한 묶음도 안 들어가면 그대로 둠
         }
-        if (rows.length) newPage(false);
+        if (groups.length) newPage(false);
       }
     }
     newPage(true);
@@ -1126,10 +1179,10 @@ var PDFMAKER = (function () {
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var API = /^https:\/\//.test(window.API_URL) ? window.API_URL : '';
-  var LS = { draft: 'nb_draft_v1', key: 'nb_gemini_key', model: 'nb_gemini_model', email: 'nb_email', code: 'nb_code' };
-  var FIELDS = ['title', 'date', 'email', 'greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions', 'rfields', 'rdeadline'];
-  var AUTO = ['greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions'];
-  var S = { id: '', auto: {}, assets: {}, emblemImg: null, published: null, zoom: 0, busy: false };
+  var LS = { draft: 'nb_draft_v1', key: 'nb_gemini_key', model: 'nb_gemini_model', email: 'nb_email', pw: 'nb_staff_pw' };
+  var FIELDS = ['title', 'date', 'email', 'greeting', 'body', 'items', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions', 'rfields', 'rdeadline'];
+  var AUTO = ['greeting', 'body', 'items', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions'];
+  var S = { id: '', auto: {}, assets: {}, emblemImg: null, published: null, zoom: 0, busy: false, pw: '' };
 
   var MEM = {}, PERSIST = true;   // 브라우저가 저장을 막으면 이 창이 열려 있는 동안만 기억
   function store(k, v) {
@@ -1183,7 +1236,7 @@ var PDFMAKER = (function () {
   }
   function applyDefaults(force) {
     var d = ND.defaults(type(), $('#title').value.trim() || '○○', $('#date').value || ND.toISO(new Date()), $('#rdeadline').value);
-    ['greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact'].forEach(function (k) { setAuto(k, d[k], force); });
+    ['greeting', 'body', 'items', 'table', 'closing', 'contact'].forEach(function (k) { setAuto(k, d[k], force); });
     setAuto('rtitle', d.reply.title, force); setAuto('rtext', d.reply.text, force); setAuto('roptions', d.reply.options, force);
     if (!$('#rdeadline').value) $('#rdeadline').value = d.reply.deadline;
   }
@@ -1194,7 +1247,7 @@ var PDFMAKER = (function () {
     var t = type();
     return {
       type: t, title: $('#title').value.trim(), date: $('#date').value || ND.toISO(new Date()),
-      greeting: $('#greeting').value, body: $('#body').value, items: $('#items').value, numStyle: $('#numStyle').value,
+      greeting: $('#greeting').value, body: $('#body').value, items: $('#items').value,
       table: $('#table').value, closing: $('#closing').value, contact: $('#contact').value,
       reply: t === 'reply' ? { title: $('#rtitle').value.trim(), text: $('#rtext').value.trim(), options: $('#roptions').value,
         fields: $('#rfields').value, phone: $('#rphone').checked, deadline: $('#rdeadline').value } : null
@@ -1286,7 +1339,68 @@ var PDFMAKER = (function () {
     $('#' + k).addEventListener('change', function () { render(); saveDraft(); });
   });
   $('#email').addEventListener('change', function () { store(LS.email, $('#email').value.trim()); });
-  $('#code').addEventListener('change', function () { store(LS.code, $('#code').value); });
+
+  /* 세부 항목: Tab = 한 단계 들어가기, Shift+Tab = 나오기 (Esc 다음 Tab은 다음 칸으로 이동) */
+  var tabEsc = false;
+  $('#items').addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { tabEsc = true; return; }
+    if (e.key !== 'Tab' || e.ctrlKey || e.altKey || e.metaKey) { tabEsc = false; return; }
+    if (tabEsc) { tabEsc = false; return; }
+    e.preventDefault();
+    var ta = this, v = ta.value, s = ta.selectionStart, en = ta.selectionEnd;
+    var ls = v.lastIndexOf('\n', s - 1) + 1;
+    var le = v.indexOf('\n', en > s && v.charAt(en - 1) === '\n' ? en - 1 : en); if (le < 0) le = v.length;
+    var block = v.slice(ls, le);
+    var out = block.split('\n').map(function (l) { return e.shiftKey ? l.replace(/^( {1,2}|\t)/, '') : '  ' + l; }).join('\n');
+    ta.value = v.slice(0, ls) + out + v.slice(le);
+    if (s === en) { var p = Math.max(ls, s + (out.length - block.length)); ta.setSelectionRange(p, p); }
+    else ta.setSelectionRange(ls, ls + out.length);
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+
+  /* 표 붙여 넣기: 엑셀·한글 표(HTML)를 칸 단위로 바꿈. 합친 칸은 << (왼쪽과 합침), ^^ (위와 합침) */
+  function cellText(td) {
+    Array.prototype.slice.call(td.querySelectorAll('br')).forEach(function (b) { b.replaceWith(' '); });
+    var ps = td.querySelectorAll('p, div, li');
+    var t = ps.length ? Array.prototype.map.call(ps, function (p) { return p.textContent; }).join(' ') : td.textContent;
+    return t.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim().replace(/^(<<|\^\^)$/, '');
+  }
+  function htmlTableRows(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var table = doc.querySelector('table');
+    if (!table) return null;
+    var grid = [];
+    Array.prototype.forEach.call(table.rows, function (tr, r) {
+      grid[r] = grid[r] || [];
+      var c = 0;
+      Array.prototype.forEach.call(tr.cells, function (td) {
+        while (grid[r][c] !== undefined) c++;
+        var cs = Math.max(1, parseInt(td.getAttribute('colspan'), 10) || 1), rs = Math.max(1, parseInt(td.getAttribute('rowspan'), 10) || 1);
+        var text = cellText(td);
+        for (var i = 0; i < rs; i++) for (var j = 0; j < cs; j++) {
+          grid[r + i] = grid[r + i] || [];
+          grid[r + i][c + j] = i === 0 && j === 0 ? text : j > 0 ? '<<' : '^^';
+        }
+        c += cs;
+      });
+    });
+    var n = Math.max.apply(null, grid.map(function (r) { return r.length; }).concat([0]));
+    grid = grid.map(function (r) { var o = []; for (var k = 0; k < n; k++) o.push(r[k] === undefined ? '' : r[k]); return o; })
+      .filter(function (r) { return r.some(function (x) { return x && x !== '<<' && x !== '^^'; }); });
+    return grid.length ? grid : null;
+  }
+  $('#table').addEventListener('paste', function (e) {
+    var cd = e.clipboardData, html = cd ? cd.getData('text/html') : '';
+    if (!html || !/<table/i.test(html)) return;
+    var rows = htmlTableRows(html);
+    if (!rows) return;
+    e.preventDefault();
+    var tsv = rows.map(function (r) { return r.join('\t'); }).join('\n');
+    var ta = this;
+    if (!ta.value.trim()) ta.value = tsv; else ta.setRangeText(tsv, ta.selectionStart, ta.selectionEnd, 'end');
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    toast('표를 붙여 넣었어요. (' + rows.length + '줄 × ' + rows[0].length + '칸)', 'ok');
+  });
   $('#btnDefaults').addEventListener('click', function () {
     var go = function () { applyDefaults(true); render(); saveDraft(); toast('제목·날짜·계절에 맞춘 기본 문장을 넣었어요.', 'ok'); };
     if (!edited().length) { go(); return; }
@@ -1304,7 +1418,7 @@ var PDFMAKER = (function () {
   function pickModel(key, fresh) {
     var cached = load(LS.model);
     if (cached && !fresh) return Promise.resolve(cached);
-    return fetch(GL + 'models?pageSize=200&key=' + encodeURIComponent(key)).then(function (r) {
+    return fetch(GL + 'models?pageSize=200', { headers: { 'x-goog-api-key': key } }).then(function (r) {
       return r.json().then(function (j) {
         if (!r.ok) throw aiError(r.status, j);
         var names = (j.models || []).filter(function (m) { return (m.supportedGenerationMethods || []).indexOf('generateContent') >= 0; })
@@ -1326,7 +1440,8 @@ var PDFMAKER = (function () {
   }
   function aiError(status, j) {
     var msg = (j && j.error && j.error.message) || '';
-    if (status === 400 && /API key/i.test(msg)) return new Error('AI 키가 올바르지 않아요. "AI 키 등록 방법" 탭에서 다시 확인해 주세요.');
+    if ((status === 400 && /API key/i.test(msg)) || (status === 401 && !/ACCESS_TOKEN_TYPE|model/i.test(msg))) return new Error('AI 키가 올바르지 않아요. 키를 끝까지 복사했는지 "AI 키 등록 방법" 탭에서 다시 확인해 주세요.');
+    if (status === 401) { store(LS.model, null); return new Error('이 AI 모델을 쓸 수 없어요. 한 번 더 눌러 주세요. (계속 안 되면 키를 새로 만들어 주세요.)'); }
     if (status === 403) return new Error('이 AI 키로는 사용할 수 없어요. 개인 gmail 계정으로 새 키를 만들어 주세요.');
     if (status === 429) return new Error('무료 사용 횟수를 잠시 다 썼어요. 1~2분 뒤에 다시 눌러 주세요.');
     if (status === 404) { store(LS.model, null); return new Error('AI 모델이 바뀌었어요. 한 번 더 눌러 주세요.'); }
@@ -1334,8 +1449,8 @@ var PDFMAKER = (function () {
   }
   function gemini(prompt, key) {
     return pickModel(key).then(function (model) {
-      return fetch(GL + 'models/' + model + ':generateContent?key=' + encodeURIComponent(key), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+      return fetch(GL + 'models/' + model + ':generateContent', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: {
@@ -1363,17 +1478,17 @@ var PDFMAKER = (function () {
       '형태: ' + kind,
       '제목: ' + doc.title,
       '발행일: ' + ND.fmtDay(doc.date) + ' (' + (d.getMonth() + 1) + '월, ' + ND.seasonName(doc.date) + ')',
-      '세부 항목(교사가 입력, 번호 없이 줄마다 하나):\n' + (doc.items || '(없음)')
+      '세부 항목(교사가 입력, 번호 없이 줄마다 하나, 줄 앞 띄어쓰기 2칸마다 하위 단계):\n' + (doc.items || '(없음)')
     ];
     if (doc.table && doc.table.trim()) lines.push('표 내용:\n' + doc.table);
     if (doc.type === 'reply' && doc.reply) lines.push('회신서: ' + doc.reply.title + ' / 회신 기한 ' + (doc.reply.deadline ? ND.fmtMD(doc.reply.deadline) : '없음'));
-    lines.push('현재 초안 인사말:\n' + doc.greeting, '현재 초안 안내 문단:\n' + doc.body);
+    lines.push('현재 초안 인사말:\n' + doc.greeting, '현재 초안 안내 문단:\n' + doc.body, '현재 마무리 문장:\n' + (doc.closing.trim() || '(없음)'));
     lines.push(
       '작성 규칙:',
       '- greeting: 2~3줄. 첫 줄은 "학부모님, 안녕하십니까?"(납입고지형은 "학부모님 댁내 평안하심을 기원합니다."). 발행일의 달과 계절, 날씨에 어울리는 안부 한 문장을 넣는다. 줄은 \\n으로 나눈다.',
       '- body: 제목과 세부 항목에 맞춘 취지 문단 2~4문장. "다음과 같이" 또는 "아래와 같이"로 세부 항목을 안내한다는 흐름. 회신형이면 회신서 작성·제출(기한 포함)을 요청한다. 세부 항목의 날짜·장소를 지어내지 않는다.',
-      '- closing: 한 문장 (예: 학부모님의 많은 관심과 협조를 부탁드립니다.). 납입고지형은 빈 문자열.',
-      '- items: 세부 항목이 비어 있거나 "일시 : " 처럼 값이 빈 틀만 있으면, 제목에 맞는 항목 이름 틀을 줄마다 하나씩 제안(값은 비워 둠). 이미 내용이 있으면 빈 문자열.',
+      '- closing: 현재 마무리 문장이 있으면 자연스럽게 다듬은 한 문장, 없으면 빈 문자열.',
+      '- items: 세부 항목이 비어 있거나 "일시 : " 처럼 값이 빈 틀만 있으면, 제목에 맞는 항목 이름 틀을 줄마다 하나씩 제안(값은 비워 둠, 번호는 붙이지 않음). 이미 내용이 있으면 빈 문자열.',
       '- 과장·이모지·영어 금지. 학교 이름은 "본교"로 쓴다.',
       'JSON으로만 답한다: {"greeting": "...", "body": "...", "closing": "...", "items": "..."}'
     );
@@ -1388,7 +1503,7 @@ var PDFMAKER = (function () {
     gemini(aiPrompt(doc), key).then(function (r) {
       if (r.greeting) $('#greeting').value = String(r.greeting).trim();
       if (r.body) $('#body').value = String(r.body).trim();
-      if (r.closing != null) $('#closing').value = String(r.closing).trim();
+      if (doc.closing.trim() && r.closing && String(r.closing).trim()) $('#closing').value = String(r.closing).trim();
       var itemsTemplate = !doc.items.trim() || doc.items === S.auto.items;
       if (r.items && String(r.items).trim() && itemsTemplate) $('#items').value = String(r.items).trim();
       render(); saveDraft();
@@ -1405,7 +1520,7 @@ var PDFMAKER = (function () {
   function keyStatus(msg, kind) { $('#keyStatus').innerHTML = ''; var d = document.createElement('div'); d.className = 'status ' + kind; d.textContent = msg; $('#keyStatus').appendChild(d); }
   $('#keySave').addEventListener('click', function () {
     var k = $('#apiKey').value.trim();
-    if (!/^AIza[0-9A-Za-z_\-]{20,}$/.test(k)) { keyStatus('키 모양이 맞지 않아요. AIza로 시작하는 글자 전체를 복사해 붙여 넣어 주세요.', 'err'); return; }
+    if (!/^[A-Za-z0-9._\-]{20,}$/.test(k)) { keyStatus('키 모양이 맞지 않아요. AQ.(또는 AIza)로 시작하는 글자 전체를 빈칸 없이 복사해 붙여 넣어 주세요.', 'err'); return; }
     keyStatus('확인하는 중…', 'info');
     pickModel(k, true).then(function (model) {
       store(LS.key, k); updateChip();
@@ -1442,9 +1557,8 @@ var PDFMAKER = (function () {
     if (!doc.title) return ['#title', '제목을 입력해 주세요.'];
     if (!doc.date) return ['#date', '발행일을 정해 주세요.'];
     var em = $('#email').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return ['#email', 'PDF와 QR코드를 받을 교사 메일 주소를 정확히 입력해 주세요.'];
     if (doc.type === 'reply' && !String(doc.reply.options || '').trim()) return ['#roptions', '회신서 선택지를 한 개 이상 적어 주세요.'];
-    if (!$('#code').value.trim()) return ['#code', '교사 확인 번호를 입력해 주세요.'];
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return ['#email', 'PDF와 QR코드를 받을 메일 주소를 정확히 입력해 주세요.'];
     return null;
   }
   function makePdf(doc) {
@@ -1467,8 +1581,8 @@ var PDFMAKER = (function () {
     S.busy = true; $('#btnPublish').disabled = true;
     $('#runSteps').hidden = false; ['save', 'pdf', 'qr', 'upload'].forEach(function (s) { step(s, ''); });
     $('#result').hidden = true; pubStatus('', '');
-    var email = $('#email').value.trim(), code = $('#code').value.trim(), cur = 'save', saved, qr, pdf;
-    store(LS.email, email); store(LS.code, code);
+    var email = $('#email').value.trim(), code = S.pw, cur = 'save', saved, qr, pdf;
+    store(LS.email, email);
     step('save', 'doing');
     api('saveNotice', { code: code, id: S.id, notice: doc, viewerBase: pagesBase() }).then(function (r) {
       saved = r; S.id = r.id; step('save', 'done');
@@ -1486,7 +1600,7 @@ var PDFMAKER = (function () {
       $('#resUrl').value = saved.viewerUrl;
       $('#resPdf').href = r.pdfUrl || '#'; $('#resOpen').href = saved.viewerUrl;
       $('#resSheet').hidden = !r.sheetUrl; if (r.sheetUrl) $('#resSheet').href = r.sheetUrl;
-      $('#resMail').textContent = r.emailed ? '✓ ' + email + ' 으로 PDF와 QR코드를 보냈어요. (보낸 주소: ' + r.sentFrom + ')'
+      $('#resMail').textContent = r.emailed ? '✓ ' + email + ' (으)로 PDF와 QR코드를 보냈어요. 메일함을 확인해 주세요.'
         : '메일은 보내지 못했어요: ' + (r.mailError || '') + ' (PDF는 드라이브에 저장됐어요.)';
       $('#result').hidden = false;
       pubStatus('배포가 끝났어요. 메일로 받은 QR코드나 아래 주소를 가정에 보내 주세요. PDF는 학교 홈페이지에 올리면 돼요.', 'ok');
@@ -1494,6 +1608,7 @@ var PDFMAKER = (function () {
     }).catch(function (e) {
       step(cur, 'fail');
       pubStatus(e.message, 'err');
+      pwFailed(e);
     }).then(function () { S.busy = false; $('#btnPublish').disabled = false; });
   });
   $('#btnPdf').addEventListener('click', function () {
@@ -1520,7 +1635,7 @@ var PDFMAKER = (function () {
       var n = j.notice;
       S.id = id; S.auto = {};
       var r = $('input[name="ntype"][value="' + n.type + '"]'); if (r) r.checked = true;
-      ['title', 'date', 'greeting', 'body', 'items', 'numStyle', 'table', 'closing', 'contact'].forEach(function (k) { $('#' + k).value = n[k] || ''; });
+      ['title', 'date', 'greeting', 'body', 'items', 'table', 'closing', 'contact'].forEach(function (k) { $('#' + k).value = n[k] || ''; });
       var rp = n.reply || {};
       $('#rtitle').value = rp.title || ''; $('#rtext').value = rp.text || ''; $('#roptions').value = rp.options || '';
       $('#rfields').value = rp.fields || ''; $('#rdeadline').value = rp.deadline || ''; $('#rphone').checked = rp.phone !== false;
@@ -1536,11 +1651,8 @@ var PDFMAKER = (function () {
     }).catch(function (e) { toast(e.message, 'err', 6000); });
   }
   $('#btnPast').addEventListener('click', function () {
-    var code = $('#code').value.trim();
-    if (!code) { toast('아래 "교사 확인 번호"를 먼저 입력해 주세요.', 'err'); $('#code').scrollIntoView({ block: 'center' }); $('#code').focus(); return; }
     var b = this; b.disabled = true; b.textContent = '불러오는 중…';
-    api('listNotices', { code: code }).then(function (j) {
-      store(LS.code, code);
+    api('listNotices', { code: S.pw }).then(function (j) {
       var ul = $('#pastList'); ul.innerHTML = ''; ul.hidden = false;
       if (!j.items.length) { var e = document.createElement('li'); e.innerHTML = '<span class="empty">아직 배포한 통신문이 없어요.</span>'; ul.appendChild(e); return; }
       j.items.forEach(function (it) {
@@ -1558,13 +1670,50 @@ var PDFMAKER = (function () {
         li.appendChild(t); li.appendChild(bs); li.appendChild(m);
         ul.appendChild(li);
       });
-    }).catch(function (e) { toast(e.message, 'err', 6000); })
+    }).catch(function (e) { toast(e.message, 'err', 6000); pwFailed(e); })
       .then(function () { b.disabled = false; b.textContent = '목록 새로 보기'; });
+  });
+
+  /* ---------- 교직원 확인 ---------- */
+  function savedPw() {
+    try { var v = localStorage.getItem(LS.pw) || sessionStorage.getItem(LS.pw); if (v) return v; } catch (e) {}
+    return MEM[LS.pw] || '';
+  }
+  function keepPw(pw, keep) {
+    MEM[LS.pw] = pw;
+    try {
+      localStorage.removeItem(LS.pw); sessionStorage.removeItem(LS.pw);
+      if (pw) (keep ? localStorage : sessionStorage).setItem(LS.pw, pw);
+      localStorage.removeItem('nb_code');
+    } catch (e) {}
+  }
+  function gateMsg(msg, kind) { var g = $('#gateMsg'); g.innerHTML = ''; if (!msg) return; var d = document.createElement('div'); d.className = 'status ' + kind; d.textContent = msg; g.appendChild(d); }
+  function lock(msg) {
+    S.pw = ''; keepPw('', false);
+    document.body.classList.add('locked'); $('#gate').hidden = false;
+    gateMsg(msg || '', 'err'); $('#gatePw').value = ''; setTimeout(function () { $('#gatePw').focus(); }, 50);
+  }
+  function unlock(pw) {
+    S.pw = pw; document.body.classList.remove('locked'); $('#gate').hidden = true; gateMsg('');
+    render();
+  }
+  function pwFailed(e) { if (/비밀번호/.test(e && e.message)) lock(e.message + ' 다시 입력해 주세요.'); }
+  $('#gateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = $('#gatePw').value;
+    if (!pw) { gateMsg('비밀번호를 입력해 주세요.', 'err'); return; }
+    var b = $('#gateBtn'); b.disabled = true; b.textContent = '확인하는 중…'; gateMsg('');
+    api('login', { code: pw }).then(function () {
+      keepPw(pw, $('#gateKeep').checked); unlock(pw);
+    }).catch(function (err) { gateMsg(err.message, 'err'); $('#gatePw').select(); })
+      .then(function () { b.disabled = false; b.textContent = '들어가기'; });
+  });
+  $('#btnLogout').addEventListener('click', function () {
+    ask('이 컴퓨터에서 로그아웃할까요?\n(작성 중인 내용은 그대로 남아요.)', '로그아웃').then(function (ok) { if (ok) lock(''); });
   });
 
   /* ---------- 시작 ---------- */
   $('#email').value = load(LS.email) || '';
-  $('#code').value = load(LS.code) || '';
   var restored = restoreDraft();
   if (!$('#date').value) $('#date').value = ND.toISO(new Date());
   if (restored) {
@@ -1577,7 +1726,13 @@ var PDFMAKER = (function () {
   onType();
   if (!restored) applyDefaults(true);
   updateChip();
-  render();
+  var pw0 = savedPw();
+  if (pw0) {
+    unlock(pw0);
+    api('login', { code: pw0 }).catch(function (e) { pwFailed(e); });   // 비밀번호가 바뀌었으면 다시 묻기
+  } else {
+    lock('');
+  }
   loadAssets().then(render);
 })();
 </script>

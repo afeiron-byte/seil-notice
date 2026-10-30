@@ -40,6 +40,8 @@
 .nd-item{word-break:keep-all;overflow-wrap:anywhere;white-space:pre-wrap}
 .nd-item.l1{padding-left:7.5mm;text-indent:-4.5mm}
 .nd-item.l2{padding-left:12mm;text-indent:-4.5mm;font-size:10.5pt}
+.nd-item.l3{padding-left:16.5mm;text-indent:-4.5mm;font-size:10.5pt}
+.nd-item.l4{padding-left:21mm;text-indent:-4.5mm;font-size:10.5pt}
 .nd-item.note{padding-left:7.5mm;text-indent:-4.5mm;font-size:10pt}
 .nd-item.plain{padding-left:3mm}
 .nd-table-wrap{margin:2mm 0 1mm}
@@ -307,7 +309,6 @@ var ND = (function () {
         '납입금액 : 아래 표와 같음\n' +
         '납입방법 : 신용카드 또는 개별 CMS 통장에서 인출일에 자동인출\n' +
         '영수증이 필요하신 분은 본교 행정실이나 학교 홈페이지에서 발급받으실 수 있습니다.';
-      d.numStyle = 'ga';
       d.table = '학년\t금액\t기간\t비고\n1학년\t\t\t\n2학년\t\t\t\n3학년\t\t\t';
       d.closing = '';
       d.contact = '문의전화 : ' + SCHOOL.adminPhone + '(행정실)';
@@ -320,9 +321,8 @@ var ND = (function () {
         d.body = josa(subj, '과/와') + ' 관련하여 다음과 같이 안내해 드립니다. 가정에서도 내용을 확인하시어 자녀가 잘 준비할 수 있도록 지도해 주시기 바랍니다.';
       }
       d.items = '일시 : ' + fmtDay(addDays(iso, 7)) + '\n장소 : \n대상 : \n내용 : ';
-      d.numStyle = '1';
       d.table = '';
-      d.closing = '학부모님의 많은 관심과 협조를 부탁드립니다.';
+      d.closing = '';
       d.contact = '';
     }
     var r = { phone: true, fields: '', deadline: deadline, note: '' };
@@ -343,27 +343,31 @@ var ND = (function () {
     return d;
   }
 
-  /* ---------- 세부 항목 (줄마다 하나, 들여쓰기 = 하위 항목) ---------- */
-  function parseItems(text, style) {
-    var out = [], top = 0, sub = 0;
+  /* ---------- 세부 항목: 1. → 가. → 1) → 가)  (줄 앞 띄어쓰기 2칸마다 한 단계) ---------- */
+  function itemLabel(level, n) {
+    var g = GANADA.charAt((n - 1) % 14);
+    return [n + '.', g + '.', n + ')', g + ')'][level];
+  }
+  function parseItems(text) {
+    var out = [], cnt = [0, 0, 0, 0], prev = -1;
     String(text || '').split(/\r?\n/).forEach(function (raw) {
       if (!raw.trim()) return;
-      var indent = /^(\s{2,}|\t|\s*[-·•ㆍ]\s)/.test(raw);
-      var line = raw.trim().replace(/^[-·•ㆍ]\s*/, '');
+      var lead = /^[ \t　]*/.exec(raw)[0].replace(/\t/g, '  ').replace(/　/g, '  ').length;
+      var level = Math.min(3, Math.floor(lead / 2));
+      var line = raw.trim();
+      if (/^[-·•ㆍ]\s/.test(line)) { line = line.replace(/^[-·•ㆍ]\s*/, ''); if (level === 0) level = 1; }
       if (/^[※*]/.test(line)) { out.push({ level: 'note', label: '※', text: line.replace(/^[※*]\s*/, '') }); return; }
-      if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: indent ? 'l2' : 'plain', label: '', text: line }); return; }
-      line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|[①-⑳])\s*/, '');
-      if (indent && top > 0) {
-        sub++;
-        out.push({ level: 'l2', label: style === 'ga' ? sub + ')' : GANADA.charAt((sub - 1) % 14) + '.', text: line });
-      } else {
-        top++; sub = 0;
-        out.push({ level: 'l1', label: style === 'ga' ? GANADA.charAt((top - 1) % 14) + '.' : top + '.', text: line });
-      }
+      if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: level ? 'l' + (level + 1) : 'plain', label: '', text: line }); return; }
+      line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|\([가-하]\)|[①-⑳])\s*/, '');
+      if (level > prev + 1) level = prev + 1;             // 단계를 건너뛰지 않게
+      cnt[level]++;
+      for (var k = level + 1; k < 4; k++) cnt[k] = 0;
+      prev = level;
+      out.push({ level: 'l' + (level + 1), label: itemLabel(level, cnt[level]), text: line });
     });
     return out;
   }
-  /* 표: 엑셀·한글에서 복사(탭) 또는 | 로 구분 */
+  /* 표: 엑셀·한글에서 복사(탭으로 구분). 합친 칸은 '<<'(왼쪽과 합침), '^^'(위와 합침) */
   function parseTable(text) {
     var lines = String(text || '').split(/\r?\n/).filter(function (l) { return l.trim(); });
     if (!lines.length) return null;
@@ -398,10 +402,36 @@ var ND = (function () {
     ];
   }
   function tableBlock(rows) {
-    var thead = h('thead', null, [h('tr', null, rows[0].map(function (c) { return h('th', { text: c }); }))]);
-    var tbody = h('tbody', null, rows.slice(1).map(function (r) {
-      return h('tr', null, r.map(function (c) { return h('td', { text: c }); }));
-    }));
+    var R = rows.length, C = rows[0].length, used = rows.map(function (r) { return r.map(function () { return false; }); });
+    var MERGE = function (v) { return v === '<<' || v === '^^'; };
+    var head = 1, out = [];
+    for (var r = 0; r < R; r++) {
+      var cells = [];
+      for (var c = 0; c < C; c++) {
+        if (used[r][c]) continue;
+        var cs = 1, rs = 1;
+        while (c + cs < C && rows[r][c + cs] === '<<' && !used[r][c + cs]) cs++;
+        while (r + rs < R && rows[r + rs][c] === '^^' && !used[r + rs][c]) rs++;
+        if (r < head && rs > 1) head = Math.max(head, Math.min(r + rs, R - 1 > 0 ? R - 1 : 1));   // 제목 줄을 세로로 합친 경우
+        for (var i = 0; i < rs; i++) for (var j = 0; j < cs; j++) used[r + i][c + j] = true;
+        cells.push({ v: MERGE(rows[r][c]) ? '' : rows[r][c], cs: cs, rs: rs });
+      }
+      out.push(cells);
+    }
+    // 본문 줄 묶음: 세로로 합친 칸이 걸친 줄은 같은 쪽에 두기
+    var group = -1, groupEnd = -1, trs = [];
+    out.forEach(function (cells, r) {
+      var isHead = r < head;
+      if (!isHead && r > groupEnd) { group++; groupEnd = r; }
+      var tds = cells.map(function (x) {
+        var rs = isHead ? Math.min(x.rs, head - r) : x.rs;
+        if (!isHead && r + rs - 1 > groupEnd) groupEnd = r + rs - 1;
+        return h(isHead ? 'th' : 'td', { text: x.v, colspan: x.cs > 1 ? String(x.cs) : null, rowspan: rs > 1 ? String(rs) : null });
+      });
+      trs.push(h('tr', { 'data-g': isHead ? null : String(group) }, tds));
+    });
+    var thead = h('thead', null, trs.slice(0, head));
+    var tbody = h('tbody', null, trs.slice(head));
     return h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [thead, tbody])]);
   }
   function signBlock(doc) {
@@ -485,7 +515,7 @@ var ND = (function () {
       if (out.length) out.push(h('div', { class: 'nd-gap' }));
       body.forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
     }
-    var items = parseItems(doc.items, doc.numStyle);
+    var items = parseItems(doc.items);
     if (items.length) {
       out.push(h('div', { class: 'nd-gap' }));
       items.forEach(function (it) {
@@ -538,23 +568,28 @@ var ND = (function () {
       return last.getBoundingClientRect().bottom + mb > limit + 0.5;
     }
     function placeTable(wrap) {
-      var head = wrap.querySelector('thead'), rows = Array.prototype.slice.call(wrap.querySelectorAll('tbody tr'));
-      while (rows.length) {
+      var head = wrap.querySelector('thead'), groups = [];
+      Array.prototype.slice.call(wrap.querySelectorAll('tbody tr')).forEach(function (tr) {
+        var g = tr.getAttribute('data-g');
+        if (groups.length && groups[groups.length - 1].g === g) groups[groups.length - 1].rows.push(tr);
+        else groups.push({ g: g, rows: [tr] });
+      });
+      while (groups.length) {
         var part = h('div', { class: 'nd-table-wrap' }, [h('table', { class: 'nd-table' }, [head.cloneNode(true), h('tbody')])]);
         var tb = part.querySelector('tbody');
         inner.appendChild(part);
         var placed = 0;
-        while (rows.length) {
-          tb.appendChild(rows[0]);
-          if (over()) { tb.removeChild(rows[0]); break; }
-          rows.shift(); placed++;
+        while (groups.length) {
+          groups[0].rows.forEach(function (tr) { tb.appendChild(tr); });
+          if (over()) { groups[0].rows.forEach(function (tr) { tb.removeChild(tr); }); break; }
+          groups.shift(); placed++;
         }
         if (!placed) {
           inner.removeChild(part);
           if (inner.children.length) { newPage(false); continue; }
-          inner.appendChild(part); tb.appendChild(rows.shift());   // 한 줄도 안 들어가면 그대로 둠
+          inner.appendChild(part); groups.shift().rows.forEach(function (tr) { tb.appendChild(tr); });   // 한 묶음도 안 들어가면 그대로 둠
         }
-        if (rows.length) newPage(false);
+        if (groups.length) newPage(false);
       }
     }
     newPage(true);
