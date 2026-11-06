@@ -50,6 +50,9 @@
 .nd-table th{background:var(--nd-lbl);font-weight:700}
 .nd-closing{margin-top:2.4mm}
 .nd-contact{text-align:center;margin-top:3mm;font-size:10.5pt}
+.nd b,.nd strong{font-weight:700}
+.nd-item.nd-head{font-weight:700}
+.nd-a{color:#1a4fd6;text-decoration:underline;text-underline-offset:1.5px}
 
 /* 날짜·학교장 */
 .nd-sign{position:relative;margin-top:5mm;padding-bottom:1mm}
@@ -236,6 +239,33 @@ var ND = (function () {
     (kids || []).forEach(function (c) { if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
     return e;
   }
+
+  /* 꾸밈 글자: **글자** → 굵게, http(s):// 주소 → 누르면 열리는 링크 */
+  var URL_RE = /https?:\/\/[A-Za-z0-9\-._~:\/?#\[\]@!$&+,;=%]+/g;
+  function linkify(s) {
+    var out = [], last = 0, m;
+    URL_RE.lastIndex = 0;
+    while ((m = URL_RE.exec(s))) {
+      var url = m[0].replace(/[.,!?;:\]]+$/, '');
+      if (url.length <= m[0].indexOf('//') + 2) continue;
+      if (m.index > last) out.push(s.slice(last, m.index));
+      out.push(h('a', { class: 'nd-a', href: url, target: '_blank', rel: 'noopener', text: url }));
+      last = m.index + url.length;
+      URL_RE.lastIndex = last;
+    }
+    if (last < s.length) out.push(s.slice(last));
+    return out;
+  }
+  function rich(text) {
+    var s = String(text == null ? '' : text), out = [], last = 0, m, re = /\*\*([^*\n]+?)\*\*/g;
+    while ((m = re.exec(s))) {
+      if (m.index > last) out = out.concat(linkify(s.slice(last, m.index)));
+      out.push(h('b', null, linkify(m[1])));
+      last = re.lastIndex;
+    }
+    if (last < s.length) out = out.concat(linkify(s.slice(last)));
+    return out;
+  }
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
   function toISO(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
   function parseISO(s) {
@@ -355,8 +385,10 @@ var ND = (function () {
       var lead = /^[ \t　]*/.exec(raw)[0].replace(/\t/g, '  ').replace(/　/g, '  ').length;
       var level = Math.min(3, Math.floor(lead / 2));
       var line = raw.trim();
+      var bw = /^\*\*\s*(※\s*|[-·•ㆍ]\s+|[☞▶◦○●□■◆]\s*|\d{1,2}[.)]\s*|[가-하][.)]\s*|\(\d{1,2}\)\s*|\([가-하]\)\s*|[①-⑳]\s*)/.exec(line);
+      if (bw) line = bw[1] + '**' + line.slice(bw[0].length);
       if (/^[-·•ㆍ]\s/.test(line)) { line = line.replace(/^[-·•ㆍ]\s*/, ''); if (level === 0) level = 1; }
-      if (/^[※*]/.test(line)) { out.push({ level: 'note', label: '※', text: line.replace(/^[※*]\s*/, '') }); return; }
+      if (/^(※|\*(?!\*))/.test(line)) { out.push({ level: 'note', label: '※', text: line.replace(/^(※|\*(?!\*))\s*/, '') }); return; }
       if (/^[☞▶◦○●□■◆]/.test(line)) { out.push({ level: level ? 'l' + (level + 1) : 'plain', label: '', text: line }); return; }
       line = line.replace(/^(\d{1,2}[.)]|[가-하][.)]|\(\d{1,2}\)|\([가-하]\)|[①-⑳])\s*/, '');
       if (level > prev + 1) level = prev + 1;             // 단계를 건너뛰지 않게
@@ -426,7 +458,7 @@ var ND = (function () {
       var tds = cells.map(function (x) {
         var rs = isHead ? Math.min(x.rs, head - r) : x.rs;
         if (!isHead && r + rs - 1 > groupEnd) groupEnd = r + rs - 1;
-        return h(isHead ? 'th' : 'td', { text: x.v, colspan: x.cs > 1 ? String(x.cs) : null, rowspan: rs > 1 ? String(rs) : null });
+        return h(isHead ? 'th' : 'td', { colspan: x.cs > 1 ? String(x.cs) : null, rowspan: rs > 1 ? String(rs) : null }, rich(x.v));
       });
       trs.push(h('tr', { 'data-g': isHead ? null : String(group) }, tds));
     });
@@ -497,7 +529,7 @@ var ND = (function () {
       h('div', { class: 'nd-cut', 'aria-hidden': 'true', text: '절 취 선' }),
       h('p', { class: 'nd-slip-title', text: r.title || '회신서' }),
       table,
-      r.text ? h('p', { class: 'nd-slip-text', text: r.text }) : null,
+      r.text ? h('p', { class: 'nd-slip-text' }, rich(r.text)) : null,
       options.length ? opts2 : null,
       h('p', { class: 'nd-slip-date', id: ia ? 'f-date' : null, text: dateText }),
       sline('student', '학생'), sline('parent', '보호자'),
@@ -509,23 +541,26 @@ var ND = (function () {
   /* 본문 블록 목록 (쪽 나누기 단위) */
   function blocks(doc, opts) {
     var out = [];
-    paragraphs(doc.greeting).forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
+    paragraphs(doc.greeting).forEach(function (t) { out.push(h('p', { class: 'nd-p' }, rich(t))); });
     var body = paragraphs(doc.body);
     if (body.length) {
       if (out.length) out.push(h('div', { class: 'nd-gap' }));
-      body.forEach(function (t) { out.push(h('p', { class: 'nd-p', text: t })); });
+      body.forEach(function (t) { out.push(h('p', { class: 'nd-p' }, rich(t))); });
     }
     var items = parseItems(doc.items);
     if (items.length) {
       out.push(h('div', { class: 'nd-gap' }));
+      // 하위 항목(가. 1) …)이 있는 목록이면 큰 항목(1. 2. …)은 제목이므로 굵게
+      var sectioned = items.some(function (it) { return /^l[2-4]$/.test(it.level); });
       items.forEach(function (it) {
-        out.push(h('div', { class: 'nd-item ' + it.level, text: (it.label ? it.label + ' ' : '') + it.text }));
+        var cls = 'nd-item ' + it.level + (sectioned && it.level === 'l1' ? ' nd-head' : '');
+        out.push(h('div', { class: cls }, [it.label ? it.label + ' ' : null].concat(rich(it.text))));
       });
     }
     var rows = parseTable(doc.table);
     if (rows) out.push(tableBlock(rows));
-    paragraphs(doc.closing).forEach(function (t, i) { out.push(h('p', { class: 'nd-p' + (i === 0 ? ' nd-closing' : ''), text: t })); });
-    if (String(doc.contact || '').trim()) out.push(h('p', { class: 'nd-contact', text: doc.contact.trim() }));
+    paragraphs(doc.closing).forEach(function (t, i) { out.push(h('p', { class: 'nd-p' + (i === 0 ? ' nd-closing' : '') }, rich(t))); });
+    if (String(doc.contact || '').trim()) out.push(h('p', { class: 'nd-contact' }, rich(doc.contact.trim())));
     out.push(signBlock(doc));
     if (doc.type === 'reply') out.push(slipBlock(doc, opts));
     return out;
