@@ -216,7 +216,7 @@ body.locked main,body.locked .tabs,body.locked #btnNew2,body.locked #btnLogout{d
 </head>
 <body>
 <header class="app-head">
-  <h1>세일고 가정통신문 도우미 <small>작성 → 배포 → PDF 저장·메일</small></h1>
+  <h1>세일고 가정통신문 도우미 <small>작성 → 배포 → PDF·QR 내려받기</small></h1>
   <button type="button" class="btn sm" id="btnNew2" title="새 가정통신문 만들기">＋ 새 통신문</button>
   <button type="button" class="btn sm" id="btnLogout" title="이 컴퓨터에서 로그아웃">로그아웃</button>
   <nav class="tabs" role="tablist">
@@ -304,9 +304,7 @@ body.locked main,body.locked .tabs,body.locked #btnNew2,body.locked #btnLogout{d
 
       <div class="card">
         <h2><span class="no" id="pubNo">4</span>완성하고 배포하기</h2>
-        <div class="field"><label for="email">PDF와 QR코드를 받을 메일 주소</label>
-          <input type="email" id="email" placeholder="예) 이름@icedu.kr" autocomplete="email">
-          <div class="hint">배포하면 ① 가정용 웹페이지 주소가 만들어지고 ② 입력한 메일로 PDF와 가정용 QR코드가 전송돼요.</div></div>
+        <div class="hint">배포하면 ① 가정용 웹페이지 주소와 QR코드가 만들어지고 ② PDF와 QR코드가 드라이브에 저장돼요. 끝나면 아래에 나오는 <b>PDF 내려받기</b>·<b>QR코드 내려받기</b> 버튼으로 받으세요.</div>
         <div class="btns" style="margin-top:12px">
           <button type="button" class="btn primary" id="btnPublish">완성하고 배포하기</button>
           <button type="button" class="btn" id="btnPdf">PDF 미리 내려받기</button>
@@ -314,16 +312,17 @@ body.locked main,body.locked .tabs,body.locked #btnNew2,body.locked #btnLogout{d
         <ol class="steps-run" id="runSteps" hidden>
           <li data-step="save">가정용 웹페이지 만들기</li>
           <li data-step="pdf">PDF 만들기</li>
-          <li data-step="qr">메일로 보낼 QR코드 만들기</li>
-          <li data-step="upload">PDF·QR코드 메일 보내기</li>
+          <li data-step="qr">가정용 QR코드 만들기</li>
+          <li data-step="upload">PDF·QR코드 드라이브에 저장하기</li>
         </ol>
         <div id="pubStatus"></div>
         <div class="result" id="result" hidden>
           <div class="links">
             <div><b>가정에 보낼 주소</b></div>
             <div class="copy"><input type="text" id="resUrl" readonly><button type="button" class="btn sm" id="btnCopy">복사</button></div>
+            <div class="btns"><button type="button" class="btn primary" id="btnDlPdf">PDF 내려받기</button><button type="button" class="btn primary" id="btnDlQr">QR코드 내려받기</button></div>
             <div class="btns"><a class="btn sm" id="resPdf" target="_blank" rel="noopener">드라이브 PDF 열기</a><a class="btn sm" id="resOpen" target="_blank" rel="noopener">가정용 화면 보기</a><a class="btn sm" id="resSheet" target="_blank" rel="noopener" hidden>회신 현황 보기</a></div>
-            <div id="resMail" class="hint"></div>
+            <div id="resNote" class="hint"></div>
           </div>
         </div>
       </div>
@@ -1237,10 +1236,10 @@ var PDFMAKER = (function () {
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var API = /^https:\/\//.test(window.API_URL) ? window.API_URL : '';
-  var LS = { draft: 'nb_draft_v1', key: 'nb_gemini_key', model: 'nb_gemini_model', email: 'nb_email', pw: 'nb_staff_pw' };
-  var FIELDS = ['title', 'date', 'email', 'greeting', 'body', 'items', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions', 'rfields', 'rdeadline'];
+  var LS = { draft: 'nb_draft_v1', key: 'nb_gemini_key', model: 'nb_gemini_model', pw: 'nb_staff_pw' };
+  var FIELDS = ['title', 'date', 'greeting', 'body', 'items', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions', 'rfields', 'rdeadline'];
   var AUTO = ['greeting', 'body', 'items', 'table', 'closing', 'contact', 'rtitle', 'rtext', 'roptions'];
-  var S = { id: '', auto: {}, assets: {}, emblemImg: null, published: null, zoom: 0, busy: false, pw: '' };
+  var S = { id: '', auto: {}, assets: {}, emblemImg: null, published: null, files: null, pubSig: '', zoom: 0, busy: false, pw: '' };
 
   var MEM = {}, PERSIST = true;   // 브라우저가 저장을 막으면 이 창이 열려 있는 동안만 기억
   function store(k, v) {
@@ -1361,8 +1360,8 @@ var PDFMAKER = (function () {
   }
   function resetAll() {
     store(LS.draft, null);
-    S.id = ''; S.published = null; S.auto = {};
-    FIELDS.forEach(function (k) { if (k !== 'email') $('#' + k).value = ''; });
+    S.id = ''; S.published = null; S.auto = {}; S.files = null; S.pubSig = '';
+    FIELDS.forEach(function (k) { $('#' + k).value = ''; });
     $('input[name="ntype"][value="info"]').checked = true;
     $('#rphone').checked = true;
     $('#date').value = ND.toISO(new Date());
@@ -1396,7 +1395,6 @@ var PDFMAKER = (function () {
     $('#' + k).addEventListener('input', function () { render(); saveDraft(); });
     $('#' + k).addEventListener('change', function () { render(); saveDraft(); });
   });
-  $('#email').addEventListener('change', function () { store(LS.email, $('#email').value.trim()); });
 
   /* 세부 항목: Tab = 한 단계 들어가기, Shift+Tab = 나오기 (Esc 다음 Tab은 다음 칸으로 이동) */
   var tabEsc = false;
@@ -1645,9 +1643,7 @@ var PDFMAKER = (function () {
   function validate(doc) {
     if (!doc.title) return ['#title', '제목을 입력해 주세요.'];
     if (!doc.date) return ['#date', '발행일을 정해 주세요.'];
-    var em = $('#email').value.trim();
     if (doc.type === 'reply' && !String(doc.reply.options || '').trim()) return ['#roptions', '회신서 선택지를 한 개 이상 적어 주세요.'];
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return ['#email', 'PDF와 QR코드를 받을 메일 주소를 정확히 입력해 주세요.'];
     return null;
   }
   function makePdf(doc) {
@@ -1664,14 +1660,13 @@ var PDFMAKER = (function () {
   }
   $('#btnPublish').addEventListener('click', function () {
     if (S.busy) return;
-    var doc = collect(), bad = validate(doc);
+    var doc = collect(), bad = validate(doc), sig0 = JSON.stringify(doc);
     if (bad) { toast(bad[1], 'err'); var el = $(bad[0]); el.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(function () { el.focus(); }, 300); return; }
     if (!API) { toast('배포된 웹앱 주소(/exec)에서 열어야 배포할 수 있어요.', 'err', 6000); return; }
     S.busy = true; $('#btnPublish').disabled = true;
     $('#runSteps').hidden = false; ['save', 'pdf', 'qr', 'upload'].forEach(function (s) { step(s, ''); });
     $('#result').hidden = true; pubStatus('', '');
-    var email = $('#email').value.trim(), code = S.pw, cur = 'save', saved, qr, pdf;
-    store(LS.email, email);
+    var code = S.pw, cur = 'save', saved, qr, pdf;
     step('save', 'doing');
     api('saveNotice', { code: code, id: S.id, notice: doc, viewerBase: pagesBase() }).then(function (r) {
       saved = r; S.id = r.id; step('save', 'done');
@@ -1682,17 +1677,18 @@ var PDFMAKER = (function () {
       cur = 'qr'; step('qr', 'doing');
       qr = qrData(saved.viewerUrl); step('qr', 'done');
       cur = 'upload'; step('upload', 'doing');
-      return api('publish', { code: code, id: S.id, email: email, pdf: pdf.base64, qr: qr.split(',')[1], pdfName: fileName(doc, '.pdf'), qrName: fileName(doc, '_QR.png') });
+      return api('publish', { code: code, id: S.id, pdf: pdf.base64, qr: qr.split(',')[1], pdfName: fileName(doc, '.pdf'), qrName: fileName(doc, '_QR.png') });
     }).then(function (r) {
       step('upload', 'done');
       S.published = { url: saved.viewerUrl };
+      S.pubSig = sig0;
+      S.files = { pdf: pdf.bytes, pdfName: fileName(doc, '.pdf'), qr: qr, qrName: fileName(doc, '_QR.png') };
       $('#resUrl').value = saved.viewerUrl;
-      $('#resPdf').href = r.pdfUrl || '#'; $('#resOpen').href = saved.viewerUrl;
+      $('#resPdf').href = r.pdfUrl || '#'; $('#resPdf').hidden = !r.pdfUrl; $('#resOpen').href = saved.viewerUrl;
       $('#resSheet').hidden = !r.sheetUrl; if (r.sheetUrl) $('#resSheet').href = r.sheetUrl;
-      $('#resMail').textContent = r.emailed ? '✓ ' + email + ' (으)로 PDF와 QR코드를 보냈어요. 메일함을 확인해 주세요.'
-        : '메일은 보내지 못했어요: ' + (r.mailError || '') + ' (PDF는 드라이브에 저장됐어요.)';
+      $('#resNote').textContent = 'PDF는 학교 홈페이지에 올리고, QR코드나 위 주소는 가정에 보내 주세요.';
       $('#result').hidden = false;
-      pubStatus('배포가 끝났어요. 메일로 받은 QR코드나 아래 주소를 가정에 보내 주세요. PDF는 학교 홈페이지에 올리면 돼요.', 'ok');
+      pubStatus('배포가 끝났어요. 아래 버튼으로 PDF와 QR코드를 내려받으세요.', 'ok');
       render(); saveDraft();
     }).catch(function (e) {
       step(cur, 'fail');
@@ -1700,17 +1696,48 @@ var PDFMAKER = (function () {
       pwFailed(e);
     }).then(function () { S.busy = false; $('#btnPublish').disabled = false; });
   });
+  /* ---------- 내려받기 ---------- */
+  function saveFile(blob, name) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  }
+  function dataUrlBlob(u) {
+    var m = /^data:([^;,]+)(;base64)?,(.*)$/.exec(u), bin = atob(m[3]), arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: m[1] });
+  }
   $('#btnPdf').addEventListener('click', function () {
     var doc = collect();
     if (!doc.title) { toast('제목을 먼저 입력해 주세요.', 'err'); return; }
     var b = this; b.disabled = true; b.textContent = 'PDF 만드는 중…';
     makePdf(doc).then(function (p) {
-      var blob = new Blob([p.bytes], { type: 'application/pdf' }), a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = fileName(doc, '.pdf');
-      document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+      saveFile(new Blob([p.bytes], { type: 'application/pdf' }), fileName(doc, '.pdf'));
       toast('PDF를 내려받았어요 (' + p.pages + '쪽).', 'ok');
     }).catch(function (e) { toast(e.message, 'err', 6000); })
       .then(function () { b.disabled = false; b.textContent = 'PDF 미리 내려받기'; });
+  });
+  $('#btnDlPdf').addEventListener('click', function () {
+    if (!S.published) return;
+    var doc = collect(), sig = JSON.stringify(doc), changed = !!S.pubSig && S.pubSig !== sig;
+    if (S.files && S.files.pdf && S.pubSig === sig) {   // 방금 배포한 그 PDF
+      saveFile(new Blob([S.files.pdf], { type: 'application/pdf' }), S.files.pdfName);
+      toast('PDF를 내려받았어요.', 'ok'); return;
+    }
+    if (!doc.title) { toast('제목을 먼저 입력해 주세요.', 'err'); return; }
+    var b = this; b.disabled = true; b.textContent = 'PDF 만드는 중…';
+    makePdf(doc).then(function (p) {
+      saveFile(new Blob([p.bytes], { type: 'application/pdf' }), fileName(doc, '.pdf'));
+      if (changed) toast('배포한 뒤 고친 내용으로 PDF를 만들었어요. 가정용 화면에도 반영하려면 [완성하고 배포하기]를 다시 눌러 주세요.', '', 7000);
+      else toast('PDF를 내려받았어요 (' + p.pages + '쪽).', 'ok');
+    }).catch(function (e) { toast(e.message, 'err', 6000); })
+      .then(function () { b.disabled = false; b.textContent = 'PDF 내려받기'; });
+  });
+  $('#btnDlQr').addEventListener('click', function () {
+    if (!S.published || !S.published.url) return;
+    var f = S.files && S.files.qr ? S.files : { qr: qrData(S.published.url), qrName: fileName(collect(), '_QR.png') };
+    saveFile(dataUrlBlob(f.qr), f.qrName);
+    toast('QR코드를 내려받았어요.', 'ok');
   });
   $('#btnCopy').addEventListener('click', function () {
     var i = $('#resUrl'); i.select();
@@ -1729,10 +1756,10 @@ var PDFMAKER = (function () {
       $('#rtitle').value = rp.title || ''; $('#rtext').value = rp.text || ''; $('#roptions').value = rp.options || '';
       $('#rfields').value = rp.fields || ''; $('#rdeadline').value = rp.deadline || ''; $('#rphone').checked = rp.phone !== false;
       onType();
-      S.published = { url: url };
+      S.published = { url: url }; S.files = null; S.pubSig = JSON.stringify(collect());
       $('#resUrl').value = url; $('#resOpen').href = url;
-      $('#resPdf').href = '#'; $('#resSheet').hidden = true; $('#runSteps').hidden = true; $('#pubStatus').innerHTML = '';
-      $('#resMail').textContent = '불러온 통신문이에요. 고친 뒤 [완성하고 배포하기]를 누르면 같은 주소·QR코드로 내용이 바뀌어요.';
+      $('#resPdf').href = '#'; $('#resPdf').hidden = true; $('#resSheet').hidden = true; $('#runSteps').hidden = true; $('#pubStatus').innerHTML = '';
+      $('#resNote').textContent = '불러온 통신문이에요. PDF·QR코드를 다시 내려받을 수 있고, 고친 뒤 [완성하고 배포하기]를 누르면 같은 주소·QR코드로 내용이 바뀌어요.';
       $('#result').hidden = false; $('#restoreBar').hidden = true;
       render(); saveDraft();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1802,14 +1829,14 @@ var PDFMAKER = (function () {
   });
 
   /* ---------- 시작 ---------- */
-  $('#email').value = load(LS.email) || '';
+  store('nb_email', null);   // 예전 판에서 저장해 둔 메일 주소 지우기
   var restored = restoreDraft();
   if (!$('#date').value) $('#date').value = ND.toISO(new Date());
   if (restored) {
     $('#restoreBar').hidden = false;
     if (S.published) {
-      $('#resUrl').value = S.published.url; $('#resOpen').href = S.published.url;
-      $('#result').hidden = false; $('#resMail').textContent = '이 통신문은 이미 배포했어요. 고친 뒤 다시 배포하면 같은 주소·QR로 내용이 바뀌어요.';
+      $('#resUrl').value = S.published.url; $('#resOpen').href = S.published.url; $('#resPdf').hidden = true;
+      $('#result').hidden = false; $('#resNote').textContent = '이 통신문은 이미 배포했어요. PDF·QR코드를 다시 내려받을 수 있고, 고친 뒤 다시 배포하면 같은 주소·QR로 내용이 바뀌어요.';
     }
   }
   onType();
